@@ -1,7 +1,8 @@
+import java.util.Date;
 
 log.info "Setting attribute datetime"
 
-request.setAttribute 'datetime', new Date().toString()
+//request.setAttribute 'datetime', new Date().toString()
 
 log.info "Forwarding to the template"
 
