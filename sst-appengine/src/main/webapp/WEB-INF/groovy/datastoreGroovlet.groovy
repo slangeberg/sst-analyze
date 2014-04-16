@@ -1,15 +1,8 @@
 import com.google.appengine.api.datastore.*
-import services.UkmoL4HRfndGlobOSTIARemoteService
 
 ///
 
-UkmoL4HRfndGlobOSTIARemoteService l4hrRemoteService = new UkmoL4HRfndGlobOSTIARemoteService()
 
-log.info("l4hrRemoteService: "+l4hrRemoteService)
-
-def result = l4hrRemoteService.loadAnalysedSST()
-
-log.info("result: $result")
 
 int count = datastore.execute { select count from Person }
 
