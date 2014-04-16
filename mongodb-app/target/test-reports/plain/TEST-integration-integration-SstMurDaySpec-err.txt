@@ -1,2 +1,0 @@
---Output from Can save lon field--
---Output from Can save temperatures--
