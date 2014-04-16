@@ -33,10 +33,13 @@ dependencies {
         logger.warn("Changed groovy version because running on ${System.getProperty('os.name')}")
         compile "org.codehaus.groovy:groovy-all:2.1.10:indy", { force = true }
         compile "org.codehaus.groovy:groovy:2.1.10:indy", { force = true }
+
     } else {
         logger.info("Using predefined groovy version $groovyVersion because running on ${System.getProperty('os.name')}")
         compile "org.codehaus.groovy:groovy-all:${groovyVersion}:indy"
     }
+
+    compile 'org.apache.commons:commons-lang3:3.3.2'
 
     compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVersion",
             "com.google.appengine:appengine-api-labs:$gaeVersion"
