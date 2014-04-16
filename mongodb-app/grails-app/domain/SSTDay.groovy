@@ -1,0 +1,3 @@
+class SSTDay {
+    String results;
+}
