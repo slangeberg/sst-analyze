@@ -18,6 +18,26 @@ buildscript {
     }
 }
 
+// See:
+// https://github.com/GoogleCloudPlatform/gradle-appengine-plugin#gradle-app-engine-plugin-
+appengine {
+    httpPort = 88
+
+    appcfg {
+        email = 'slangeberg@gmail.com'
+        //passIn = true
+
+//        logs {
+//            severity = 1
+//            outputFile = file('mylogs.txt')
+//        }
+
+        app {
+            id = 'sst-appengine'
+        }
+    }
+}
+
 repositories {
     maven { url 'http://dl.bintray.com/gaelyk/groovy-patches/'}
     mavenCentral()
