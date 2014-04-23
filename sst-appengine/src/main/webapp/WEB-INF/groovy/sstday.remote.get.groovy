@@ -30,7 +30,6 @@ if( analysedSSTCache.containsKey(analysed_sst) ){
 
     String url = "$analysedSSTUrl$analysed_sst"
 
-    //result = urlFetch.fetch(url.toURL()).text
     HTTPResponse response = url.toURL().get(deadline: 30) //30sec.
 
     assert response.statusCode == 200
