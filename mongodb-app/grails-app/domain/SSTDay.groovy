@@ -1,3 +1,0 @@
-class SSTDay {
-    String results;
-}
