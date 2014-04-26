@@ -23,7 +23,18 @@ class SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_ReaderSpec extends Specification 
 
         then:
         reader.dataset.startsWith "Dataset {"
-        reader.dataset.endsWith "sea_surface_temperature%2fALL_UKMO-L4HRfnd-GLOB-OSTIA_v01-fv02%2enc;\n"
+        !reader.dataset.contains("------")
+    }
+
+    def "Reads analysed_sst"(){
+        given: "have result string"
+        String result = createResult()
+        when:
+        SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader reader = new SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader(result);
+
+        then:
+        reader.analysedSst.startsWith "[0][0], 0, -32768, -32768, -32768, -32768"
+        reader.analysedSst.endsWith "[0][2], 2, -32768, -32768, -32768, -32768\n"
     }
 
     String createResult() {
@@ -39,9 +50,9 @@ class SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_ReaderSpec extends Specification 
 } sea_surface_temperature%2fALL_UKMO-L4HRfnd-GLOB-OSTIA_v01-fv02%2enc;
 ---------------------------------------------
 analysed_sst.analysed_sst[1][3][5]
-[0][0], -32768, -32768, -32768, -32768, -32768
-[0][1], -32768, -32768, -32768, -32768, -32768
-[0][2], -32768, -32768, -32768, -32768, -32768
+[0][0], 0, -32768, -32768, -32768, -32768
+[0][1], 1, -32768, -32768, -32768, -32768
+[0][2], 2, -32768, -32768, -32768, -32768
 
 analysed_sst.time[1]
 "2006-04-02T00:00:00Z"

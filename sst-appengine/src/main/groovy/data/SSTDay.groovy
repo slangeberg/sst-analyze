@@ -2,7 +2,10 @@ package data
 
 import com.google.appengine.repackaged.org.joda.time.LocalDateTime
 
-/*
+/* Example - src:
+http://thredds.jpl.nasa.gov/thredds/dodsC/sea_surface_temperature/ALL_UKMO-L4HRfnd-GLOB-OSTIA_v01-fv02.nc.ascii?analysed_sst[0:1:0][0:1:1][0:1:1]
+--------------------------------------------------
+
 Dataset {
     Grid {
      ARRAY:
@@ -32,5 +35,5 @@ class SSTDay {
     LocalDateTime dateTime
     List<Double> lat
     List<Double> lon
-    List<List<Integer>> analysed_sst // [lat][lon]
+    List<List<Integer>> analysedSst // [lat][lon]
 }

@@ -56,7 +56,13 @@ html.html {
 //        p "${sstDay}"
         h3 "day.dataset:"
         p "${sstDay.dataset}"
-//        h3 "rawResult: "
-//        p "$result"
+        h3 "day.dateTime: "
+        p "${sstDay.dateTime}"
+        h3 "day.lat: "
+        p "${sstDay.lat}"
+        h3 "day.lon: "
+        p "${sstDay.lon}"
+        h3 "day.analysed_sst: "
+        p "${sstDay.analysedSst}"
     }
 }
