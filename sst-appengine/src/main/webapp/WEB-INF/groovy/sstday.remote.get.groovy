@@ -52,11 +52,11 @@ log.info("getAnalysedSSt() - analysed_sst: $analysed_sst, time: ${timer.getTime(
 html.html {
     body {
         p "analysed_sst: ${analysed_sst} - time: ${timer.time}ms, result:"
-        h3 "SSTDay:"
-        p "${sstDay}"
-        h3 "dataSet:"
-        p "${reader.dataSet}"
-        h3 "rawResult: "
-        p "$result"
+//        h3 "SSTDay:"
+//        p "${sstDay}"
+        h3 "day.dataset:"
+        p "${sstDay.dataset}"
+//        h3 "rawResult: "
+//        p "$result"
     }
 }

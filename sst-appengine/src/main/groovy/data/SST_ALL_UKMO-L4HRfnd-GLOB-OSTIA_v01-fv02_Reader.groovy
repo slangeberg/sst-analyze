@@ -8,11 +8,8 @@ class SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader {
     //
     // Takes raw results as returned from SST JPL remote service
     //
-    private String rawResult
-    private String dataSet
-
-    String getRawResult() { return rawResult }
-    String getDataSet() { return dataSet }
+    String rawResult
+    String dataset
 
     public SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader(String rawResult){
 
@@ -20,7 +17,7 @@ class SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader {
 
        // log.info "rawResult: $rawResult"
         
-        this.dataSet = ""
+        this.dataset = ""
         
         boolean isDataSet = true
 
@@ -33,9 +30,15 @@ class SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader {
                     isDataSet = false
                 } else {
                     //keep in data set
-                    dataSet += "$line\n"
+                    dataset += "$line\n"
                 }
             }
         }
+    }
+
+    public SSTDay getDay(){
+        SSTDay day = new SSTDay()
+        day.dataset = dataset
+        return day
     }
 }

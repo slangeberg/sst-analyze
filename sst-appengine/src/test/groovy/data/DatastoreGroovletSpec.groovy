@@ -22,8 +22,8 @@ class SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_ReaderSpec extends Specification 
         SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader reader = new SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader(result);
 
         then:
-        reader.dataSet.startsWith "Dataset {"
-        reader.dataSet.endsWith "sea_surface_temperature%2fALL_UKMO-L4HRfnd-GLOB-OSTIA_v01-fv02%2enc;\n"
+        reader.dataset.startsWith "Dataset {"
+        reader.dataset.endsWith "sea_surface_temperature%2fALL_UKMO-L4HRfnd-GLOB-OSTIA_v01-fv02%2enc;\n"
     }
 
     String createResult() {
