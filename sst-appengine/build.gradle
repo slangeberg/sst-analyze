@@ -39,6 +39,7 @@ appengine {
 }
 
 repositories {
+   // flatDir name:'ExternalJars', dirs:'./lib'
     maven { url 'http://dl.bintray.com/gaelyk/groovy-patches/'}
     mavenCentral()
     jcenter()
@@ -59,8 +60,13 @@ dependencies {
         compile "org.codehaus.groovy:groovy-all:${groovyVersion}:indy"
     }
 
-    compile 'org.apache.commons:commons-lang3:3.3.2'
+//    compile ':dap2:1.0.0'
+   // compile 'org.opendap:dap2:1.0.0'
 
+    compile 'edu.ucar:opendap:2.2.2'
+
+    compile 'org.apache.commons:commons-lang3:3.3.2'
+    compile 'commons-httpclient:commons-httpclient:3.1'
     compile "com.google.appengine:appengine-api-1.0-sdk:$gaeVersion",
             "com.google.appengine:appengine-api-labs:$gaeVersion"
 
@@ -71,7 +77,7 @@ dependencies {
 
     testCompile 'org.gaelyk:gaelyk-spock:0.4'
     testCompile "com.google.appengine:appengine-api-stubs:$gaeVersion",
-            "com.google.appengine:appengine-testing:$gaeVersion"
+                "com.google.appengine:appengine-testing:$gaeVersion"
 
     functionalTestCompile 'org.seleniumhq.selenium:selenium-firefox-driver:2.40.0'
     functionalTestCompile 'org.gebish:geb-spock:0.9.2'

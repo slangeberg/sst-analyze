@@ -1,5 +1,7 @@
 package data
 
+import com.google.appengine.labs.repackaged.com.google.common.collect.Lists
+
 import java.util.logging.Logger
 
 class SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader {
@@ -10,7 +12,10 @@ class SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader {
     //
     String rawResult
     String dataset
-    String analysedSst
+
+    String analysedSstValue
+    List<List<Integer>> analysedSst
+
 /* Example - src:
 http://thredds.jpl.nasa.gov/thredds/dodsC/sea_surface_temperature/ALL_UKMO-L4HRfnd-GLOB-OSTIA_v01-fv02.nc.ascii?analysed_sst[0:1:0][0:1:1][0:1:1]
 --------------------------------------------------
@@ -46,8 +51,9 @@ analysed_sst.lon[2]
        // log.info "rawResult: $rawResult"
         
         this.dataset = ""
-        this.analysedSst = ""
-        
+        this.analysedSstValue = ""
+        this.analysedSst = new ArrayList<List<Integer>>()
+
         boolean isDataSet = true
         boolean isAnalysedSst = false
         boolean isTime = false
@@ -78,14 +84,20 @@ analysed_sst.lon[2]
 
             } else if ( isAnalysedSst ){
                 isAnalysedSst = true
-                analysedSst += "$line\n"
+                analysedSstValue += "$line\n"
+                List split = line.split(/,/)
+                split.remove(0) //should be coordinates, like: [lat][lon]
+                List<Integer> lon = new ArrayList<Integer>()
+                split.each {
+                    lon.add(Integer.valueOf(it.trim()))
+                }
+                analysedSst.add(lon)
             }
         }
     }
 
     public SSTDay getDay(){
-        SSTDay day = new SSTDay()
-        day.dataset = dataset
+        SSTDay day = new SSTDay(this)
         return day
     }
 }

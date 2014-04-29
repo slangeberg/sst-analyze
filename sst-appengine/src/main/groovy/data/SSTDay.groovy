@@ -36,4 +36,9 @@ class SSTDay {
     List<Double> lat
     List<Double> lon
     List<List<Integer>> analysedSst // [lat][lon]
+
+    public SSTDay(SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader reader){
+        this.dataset = reader.dataset
+        this.analysedSst = reader.analysedSst
+    }
 }
