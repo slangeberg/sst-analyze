@@ -33,8 +33,8 @@ class SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_ReaderSpec extends Specification 
         SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader reader = new SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader(result);
 
         then:
-        reader.analysedSstValue.startsWith "[0][0], 0, -32768, -32768, -32768, -32768"
-        reader.analysedSstValue.endsWith "[0][2], 2, -32768, -32768, -32768, -32768\n"
+        reader.analysedSstValue.startsWith "[0,-32768,-32768,-32768,-32768],"
+        reader.analysedSstValue.endsWith ",[2,-32768,-32768,-32768,-32768],"
     }
 
     def "Reads analysed_sst"(){

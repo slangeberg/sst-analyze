@@ -84,9 +84,15 @@ analysed_sst.lon[2]
 
             } else if ( isAnalysedSst ){
                 isAnalysedSst = true
-                analysedSstValue += "$line\n"
-                List split = line.split(/,/)
+
+                analysedSstValue += "["
+
+                line = line.replaceAll(" ", "")
+                List split = line.split(",")
                 split.remove(0) //should be coordinates, like: [lat][lon]
+
+                analysedSstValue += split.join(",") + "],"
+
                 List<Integer> lon = new ArrayList<Integer>()
                 split.each {
                     lon.add(Integer.valueOf(it.trim()))
@@ -96,8 +102,8 @@ analysed_sst.lon[2]
         }
     }
 
-    public SSTDay getDay(){
-        SSTDay day = new SSTDay(this)
+    public SSTDay getDay(String analysedSSTKey){
+        SSTDay day = new SSTDay(analysedSSTKey, this)
         return day
     }
 }

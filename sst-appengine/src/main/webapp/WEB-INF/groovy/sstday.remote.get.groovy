@@ -44,7 +44,12 @@ if( analysedSSTCache.containsKey(analysed_sst) ){
 }
 
 SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader reader = new SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader(result)
-SSTDay sstDay = reader.getDay()
+sstDay = reader.getDay(analysed_sst)
+sstDay.save()
+
+assert SSTDay.count() == 1
+assert sstDay         == SSTDay.get(analysed_sst)
+assert SSTDay.findAll { where analysedSSTKey == analysed_sst } == 1
 
 // result = new JSON(result)
 log.info("getAnalysedSSt() - analysed_sst: $analysed_sst, time: ${timer.getTime()}ms")
