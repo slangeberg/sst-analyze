@@ -43,11 +43,28 @@ class SSTDay {
     LocalDateTime dateTime
     List<Double> lat
     List<Double> lon
+
+    String analysedSstValue
     List<List<Integer>> analysedSst // [lat][lon]
 
     public SSTDay(String analysedSSTKey, SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader reader){
         this.analysedSSTKey = analysedSSTKey
         this.dataset = reader.dataset
-        this.analysedSst = reader.analysedSst
+       // this.analysedSst = reader.analysedSst
+        this.analysedSstValue = reader.analysedSst
+    }
+
+    //Lazy init
+    List<List<Integer>> getAnalysedSst(){
+        if( !analysedSst ){
+            analysedSst = new ArrayList<List<Integer>>()
+//            List<Integer> lon = new ArrayList<Integer>()
+//            List lats = analysedSstValue.split(",")
+//            lats.each {
+//                lon.add(Integer.valueOf(it.trim()))
+//            }
+//            analysedSst.add(lon)
+        }
+        return analysedSst
     }
 }

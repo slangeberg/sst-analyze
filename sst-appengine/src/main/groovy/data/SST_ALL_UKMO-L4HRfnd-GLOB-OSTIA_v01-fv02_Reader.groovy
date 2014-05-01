@@ -1,6 +1,7 @@
 package data
 
-import com.google.appengine.labs.repackaged.com.google.common.collect.Lists
+import com.google.appengine.labs.repackaged.org.json.JSONArray
+import com.google.appengine.labs.repackaged.org.json.JSONObject
 
 import java.util.logging.Logger
 
@@ -13,8 +14,7 @@ class SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader {
     String rawResult
     String dataset
 
-    String analysedSstValue
-    List<List<Integer>> analysedSst
+    String analysedSst
 
 /* Example - src:
 http://thredds.jpl.nasa.gov/thredds/dodsC/sea_surface_temperature/ALL_UKMO-L4HRfnd-GLOB-OSTIA_v01-fv02.nc.ascii?analysed_sst[0:1:0][0:1:1][0:1:1]
@@ -51,8 +51,10 @@ analysed_sst.lon[2]
        // log.info "rawResult: $rawResult"
         
         this.dataset = ""
-        this.analysedSstValue = ""
-        this.analysedSst = new ArrayList<List<Integer>>()
+        this.analysedSst = ""
+
+     //   List<List<Integer>> sstVals = new ArrayList<List<Integer>>()
+        JSONArray sstVals = new JSONArray()
 
         boolean isDataSet = true
         boolean isAnalysedSst = false
@@ -85,21 +87,24 @@ analysed_sst.lon[2]
             } else if ( isAnalysedSst ){
                 isAnalysedSst = true
 
-                analysedSstValue += "["
+            //    analysedSst += "["
 
                 line = line.replaceAll(" ", "")
                 List split = line.split(",")
                 split.remove(0) //should be coordinates, like: [lat][lon]
 
-                analysedSstValue += split.join(",") + "],"
-
-                List<Integer> lon = new ArrayList<Integer>()
+                //List<Integer> lon = new ArrayList<Integer>()
+                JSONArray lon = new JSONArray()
+             //   List lats = line.split(",")
                 split.each {
-                    lon.add(Integer.valueOf(it.trim()))
+                    lon.put(Integer.valueOf(it.trim()))
                 }
-                analysedSst.add(lon)
+                sstVals.put(lon)
+
+               // analysedSst += split.join(",") + "],"
             }
         }
+        analysedSst = sstVals.toString()
     }
 
     public SSTDay getDay(String analysedSSTKey){
