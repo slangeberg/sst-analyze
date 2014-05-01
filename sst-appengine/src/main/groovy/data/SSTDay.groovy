@@ -1,6 +1,8 @@
 package data
 
+import com.google.appengine.labs.repackaged.org.json.JSONArray
 import com.google.appengine.repackaged.org.joda.time.LocalDateTime
+import groovy.transform.CompileStatic
 import groovyx.gaelyk.datastore.Entity
 import groovyx.gaelyk.datastore.Key
 import groovyx.gaelyk.datastore.Unindexed
@@ -33,8 +35,6 @@ analysed_sst.lat[2]
 analysed_sst.lon[2]
 -179.975, -179.925
  */
-
-
 @Entity(unindexed=false)
 class SSTDay {
     @Key
@@ -58,12 +58,15 @@ class SSTDay {
     List<List<Integer>> getAnalysedSst(){
         if( !analysedSst ){
             analysedSst = new ArrayList<List<Integer>>()
-//            List<Integer> lon = new ArrayList<Integer>()
-//            List lats = analysedSstValue.split(",")
-//            lats.each {
-//                lon.add(Integer.valueOf(it.trim()))
-//            }
-//            analysedSst.add(lon)
+            JSONArray sstArr = new JSONArray(analysedSstValue)
+            for (int i = 0; i < sstArr.length(); i++) {
+                List<Integer> lon = new ArrayList<Integer>()
+                JSONArray lonArr = sstArr.getJSONArray(i)
+                for (int j = 0; j < lonArr.length(); j++) {
+                    lon.add(lonArr.getInt(j))
+                }
+                analysedSst.add(lon)
+            }
         }
         return analysedSst
     }

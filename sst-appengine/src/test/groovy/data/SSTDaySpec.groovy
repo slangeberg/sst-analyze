@@ -8,6 +8,10 @@ class SSTDaySpec extends Specification {
     SSTDay day = new SSTDay("[0][0][0]", reader)
 
     def "GetAnalysedSst"() {
-        expect: day.analysedSst.size() > 0
+        day.analysedSstValue = "[[1,2,3], [4,5,6]]"
+
+        expect:
+        day.analysedSst[0] == [1,2,3]
+        day.analysedSst[1] == [4,5,6]
     }
 }
