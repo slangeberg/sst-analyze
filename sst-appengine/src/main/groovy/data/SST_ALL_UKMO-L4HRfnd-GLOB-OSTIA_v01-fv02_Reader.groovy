@@ -87,25 +87,19 @@ analysed_sst.lon[2]
             } else if ( isAnalysedSst ){
                 isAnalysedSst = true
 
-            //    analysedSst += "["
-
                 line = line.replaceAll(" ", "")
                 List split = line.split(",")
                 split.remove(0) //should be coordinates, like: [lat][lon]
 
-                //List<Integer> lon = new ArrayList<Integer>()
                 JSONArray lon = new JSONArray()
-             //   List lats = line.split(",")
                 split.each {
                     lon.put(Integer.valueOf(it.trim()))
                 }
                 sstVals.put(lon)
-
-               // analysedSst += split.join(",") + "],"
             }
         }
-        analysedSst = sstVals.toString()
-    }
+        analysedSst = sstVals.toString()  //json encode
+   }
 
     public SSTDay getDay(String analysedSSTKey){
         SSTDay day = new SSTDay(analysedSSTKey, this)
