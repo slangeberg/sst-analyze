@@ -43,7 +43,9 @@ if( day ){
     } catch( SocketTimeoutException ste ){
         throw new RuntimeException("Remote fetch for analysed_sst: $analysed_sst timed out after ${timer.time}ms", ste)
     }
-    assert response.statusCode == 200
+    if( response.statusCode != 200 ){
+        throw new RuntimeException("Remote fetch for analysed_sst: $analysed_sst failed with message: ${response.text}")
+    }
 
     log.info("analysed_sst: $analysed_sst, response time: ${timer.getTime()}ms")
 

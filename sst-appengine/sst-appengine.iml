@@ -61,7 +61,11 @@
     <orderEntry type="library" scope="TEST" name="Gradle: spock-core-0.7-groovy-2.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: objenesis-1.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-lang3-3.3.2" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: dap2-1.0.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: opendap-2.2.2" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: commons-httpclient-3.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: jdom-1.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: commons-logging-1.0.4" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: commons-codec-1.2" level="project" />
   </component>
 </module>
 

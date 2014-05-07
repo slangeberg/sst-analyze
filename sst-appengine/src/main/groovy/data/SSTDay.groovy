@@ -74,7 +74,7 @@ class SSTDay {
                 analysedSst.add(lon)
             }
         }
-        log.info "getAnalysedSst() - time: ${timer.time}ms"
+        println "getAnalysedSst() - time: ${timer.time}ms"
         return analysedSst
     }
 }
