@@ -73,6 +73,8 @@ class SSTDay {
                 }
                 analysedSst.add(lon)
             }
+            // sst service populates world upside down
+            Collections.reverse(analysedSst)
         }
         println "getAnalysedSst() - time: ${timer.time}ms"
         return analysedSst

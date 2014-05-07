@@ -20,18 +20,50 @@
         </div>
         <div class="row">
             <div class="col-md-4">
-                <h2>Start Experimenting</h2>
-                <p>This template contains following sample files<ul><li><code>datetime.groovy</code></li><li><code>WEB-INF/pages/datetime.gtpl</code></li></ul>Try to edit them and watch the changes.</p>
+                <h2>Today's weather:</h2>
+                <p>Well, maybe 'today'.</p>
+                <canvas id="myCanvas">Your browser does not support the HTML5 canvas tag.</canvas>
             </div>
-
-                <script>
-                    jQuery.getJSON("/sstday/image?analysed_sst=[0:1:0][0:100:3599][0:100:7199]",
-                        function(data) {
-                            console.log(data)
-                        });
-
-                </script>
         </div>
     </body>
 </html>
 
+<script>
+    var sst = "[0:1:0][1000:10:3400][0:10:7199]"
+
+    jQuery.getJSON("/sstday/image?analysed_sst=" + sst,
+            function(data) {
+                console.log(data)
+                update(data)
+            });
+
+    var c=document.getElementById("myCanvas");
+    var ctx=c.getContext("2d");
+    // ctx.fillStyle="red";
+    ctx.fillRect(0,0,300,200);
+
+    function update(imgInfo) {
+
+        jQuery(myCanvas).css("width", imgInfo.width);
+        jQuery(myCanvas).css("height", imgInfo.height);
+
+        var data = imgInfo.data
+
+        var imageData = ctx.getImageData(0,0,imgInfo.width,imgInfo.height);
+
+        var index = 0
+
+        for (y = 0; y < imgInfo.height; y++) {
+            outpos = y * imgInfo.width * 4;// *4 for 4 ints per pixel
+            for (x = 0; x < imgInfo.width; x++) {
+                imageData.data[outpos++] = data[index++]; // r;
+                imageData.data[outpos++] = data[index++]; // g;
+                imageData.data[outpos++] = data[index++]; // b;
+                imageData.data[outpos++] = data[index++]; // a;
+            }
+        }
+
+        //console.log(imageData)
+        ctx.putImageData(imageData,0,0);
+    }
+</script>

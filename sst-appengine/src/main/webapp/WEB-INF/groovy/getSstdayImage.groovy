@@ -1,5 +1,6 @@
 import com.google.appengine.api.blobstore.BlobKey
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory
+import com.google.appengine.labs.repackaged.org.json.JSONObject
 import data.SSTDay
 import org.apache.commons.lang3.time.StopWatch
 
@@ -39,34 +40,32 @@ for ( int band : COLOR_BANDS ) {
 }
 int EMPTY_VAL = -32768;
 
-List<String> lines = new ArrayList<String>();
-//int imgSize = values.getLength();
-List<Integer> pixels = []; //[imgSize];
-//int index = 0;
+//List<String> lines = new ArrayList<String>();
+List<Integer> pixels = [];
 
-//for (int lat = 0; lat < shape[1]; lat++) {
-for( List<Short> lon : day.analysedSst ) {
+for( List<Short> lat : day.analysedSst ) {
     String line = "";
-    for( short val : lon ) {
+    for( short val : lat ) {
         //short val = values.getValue(index);
         if (val == EMPTY_VAL) {
-            line += ",";
+          //  line += ",";
             pixels = appendHexAsRGBtoList(0x914545, pixels);
         } else {
             // double celsius = val * SCALE_FACTOR;
 
-            line += val + ",";
+            //line += val + ",";
 
             pixels = appendHexAsRGBtoList(getColor(TEMP_THRESHOLDS, COLOR_BANDS, val), pixels);
         }
         //index++;
     }
-    lines.add(line);
+  //  lines.add(line);
 }
 
 //////////////////////////////////////////////
 
-println "${pixels.toString()}"
+def result = new JSONObject([width: day.analysedSst[0].size(), height: day.analysedSst.size(), data: pixels])
+println result.toString()
 
 ///////////////////////////////////////////////
 
