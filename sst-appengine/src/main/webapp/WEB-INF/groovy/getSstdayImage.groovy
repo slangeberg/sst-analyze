@@ -21,85 +21,101 @@ new LogService(this).test()
 //blobstore.getUploads request
 
 String analKey = "${analysed_sst}.analysd_sst"
+String analPixelsKey = "${analKey}.pixels"
+List<Integer> pixels = memcache.get(analPixelsKey)
 List<List<Integer>> analysedSst = memcache.get(analKey)
-
-log.info("memcache.analysedSst.get in ${timer.time}ms")
-
 if( !analysedSst ) {
-    analysedSst = SSTDay.get(analysed_sst)?.analysedSst
+    log.info("memcache.analysedSst.get is MISS")
+    analysedSst = SSTDay.get(analysed_sst)?.analysedSst;
+    if( analysedSst ){
+        log.info("memcache.analysedSst.get in ${timer.time}ms")
+        memcache.put(analKey, analysedSst)
+    } else {
+        throw new RuntimeException("No image data found for sst: $analysed_sst")
+    }
 }
-if( analysedSst ){
-    memcache.put(analKey, analysedSst)
-} else {
-    throw new RuntimeException("No image data found for sst: $analysed_sst")
+if( !pixels ) {
+    pixels = buildPixels(analysedSst)
+    memcache.put(analPixelsKey, pixels)
 }
 
-// These attributes populated in DAS, and probably should be read from there!
-double SCALE_FACTOR = 0.01D;
-short VALID_MIN = -300;
-short VALID_MAX = 4500;
-List<Integer> COLOR_BANDS = [  //low to high
-    0x00fff3, //cyan
-    0x5691fe, //blue
-    0x03ff00, //green
-    0xefff00, //yellow
-    0xff0020 //red
-]
+//////////////////////////////////////////////
 
-List<Short> TEMP_THRESHOLDS = [];
+//byte[] pixel_array = [0xFF, 0, 0, 0xFF, 0, 0, 0xFF, 0, 0, 0xa, 0, 0, 0xFF, 0, 0]
+//ByteBuffer buffer = ByteBuffer.allocate(255)
+//0..254.each {
+//    buffer.putInt(0xFF0000)
+//}
+//byte[] bytes = buffer.array();
+//for (byte b : bytes) {
+//  // sout.format("0x%x ", b);
+//}
+//String result = Base64Encoder.encode(pixel_array)// new JSONObject(.toString())//  new JSONObject([width: day.analysedSst[0].size(), height: day.analysedSst.size(), data: pixels])
+
+JSONObject result = new JSONObject([width: analysedSst[0].size(), height: analysedSst.size(), data: pixels])
+
+log.info("built result in ${timer.time}ms")
+
+println result.toString()
+
+///////////////////////////////////////////////
+
+List<Integer> buildPixels(List<List<Integer>> analysedSst){
+
+    StopWatch timer = new StopWatch()
+    timer.start()
+
+    // These attributes populated in DAS, and probably should be read from there!
+    double SCALE_FACTOR = 0.01D;
+    short VALID_MIN = -300;
+    short VALID_MAX = 4500;
+    List<Integer> COLOR_BANDS = [  //low to high
+        0x00fff3, //cyan
+        0x5691fe, //blue
+        0x03ff00, //green
+        0xefff00, //yellow
+        0xff0020 //red
+    ]
+
+    List<Short> TEMP_THRESHOLDS = [];
 //private static final SystemProperties systemProperties = new SystemProperties();
 
 // Static init
 
 //low to high
-double span = VALID_MAX - VALID_MIN;
-double step = span / COLOR_BANDS.size();
+    double span = VALID_MAX - VALID_MIN;
+    double step = span / COLOR_BANDS.size();
 
 //TEMP_THRESHOLDS = []; // new short[COLOR_BANDS.length];
-int i = 0;
-for ( int band : COLOR_BANDS ) {
-    TEMP_THRESHOLDS << (short) Math.round(VALID_MIN + step * (i++));
-}
-int EMPTY_VAL = -32768;
-
-//List<String> lines = new ArrayList<String>();
-List<Integer> pixels = [];
-
-for( List<Short> lat : analysedSst ) {
-    String line = "";
-    for( short val : lat ) {
-        //short val = values.getValue(index);
-        if (val == EMPTY_VAL) {
-          //  line += ",";
-            pixels = appendHexAsRGBtoList(0x914545, pixels);
-        } else {
-            // double celsius = val * SCALE_FACTOR;
-
-            //line += val + ",";
-
-            pixels = appendHexAsRGBtoList(getColor(TEMP_THRESHOLDS, COLOR_BANDS, val), pixels);
-        }
-        //index++;
+    int i = 0;
+    for ( int band : COLOR_BANDS ) {
+        TEMP_THRESHOLDS << (short) Math.round(VALID_MIN + step * (i++));
     }
-  //  lines.add(line);
+    int EMPTY_VAL = -32768;
+
+    List<Integer> pixels = []
+//List<String> lines = new ArrayList<String>();
+    for( List<Short> lat : analysedSst ) {
+        String line = "";
+        for( short val : lat ) {
+            //short val = values.getValue(index);
+            if (EMPTY_VAL.equals(val)) {
+                //  line += ",";
+                pixels = appendHexAsRGBtoList(0x914545, pixels);
+            } else {
+                // double celsius = val * SCALE_FACTOR;
+
+                //line += val + ",";
+
+                pixels = appendHexAsRGBtoList(getColor(TEMP_THRESHOLDS, COLOR_BANDS, val), pixels);
+            }
+            //index++;
+        }
+        //  lines.add(line);
+    }
+    log.info("buildPixels() - ${analysedSst.size()}x${analysedSst[0].size()} pixels in ${timer.time}ms")
+    return pixels;
 }
-
-//////////////////////////////////////////////
-
-byte[] pixel_array = [0xFF, 0, 0, 0xFF, 0, 0, 0xFF, 0, 0, 0xa, 0, 0, 0xFF, 0, 0]
-ByteBuffer buffer = ByteBuffer.allocate(255)
-0..254.each {
-    buffer.putInt(0xFF0000)
-}
-byte[] bytes = buffer.array();
-for (byte b : bytes) {
-  // sout.format("0x%x ", b);
-}
-String result = Base64Encoder.encode(pixel_array)// new JSONObject(.toString())//  new JSONObject([width: day.analysedSst[0].size(), height: day.analysedSst.size(), data: pixels])
-
-println result
-
-///////////////////////////////////////////////
 
 List<Integer> appendHexAsRGBtoList(int hex, List<Integer> list) {
     int r = (hex & 0xFF0000) >> 16;

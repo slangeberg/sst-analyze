@@ -45,7 +45,7 @@ class SSTDay {//implements Serializable {
 
 //    static final long serialVersionUID = 1L;
 
-    final Logger log = Logger.getLogger(this.class.name)
+//    Logger log = Logger.getLogger(this.class.name)
 
     @Key String analysedSSTKey //[time][lat][lon]
 
@@ -88,7 +88,7 @@ class SSTDay {//implements Serializable {
             Collections.reverse(analysedSst)
         }
 
-        log.info "getAnalysedSst() - time: ${timer.time}ms"
+//        log.info "getAnalysedSst() - time: ${timer.time}ms"
         return analysedSst
     }
 }
