@@ -3,26 +3,31 @@
         <title>Home</title>
 
         <script src="/js/jquery-1.11.0.js"></script>
+
+        <style>
+            .content-loading  {
+                position: absolute;
+                width: 300px;
+                height: 150px;
+                background: url('/images/ajax-loader.gif') center center no-repeat;
+            }
+
+        </style>
     </head>
 
     <body>
         <div class="jumbotron center">
             <a href="http://gaelyk.appspot.com"><img alt="Gaelyk Logo" src="/images/gaelyk.png"/></a>
             <br/>
-            <p>
-                Congratulations, you've just created your first
-                <a href="http://gaelyk.appspot.com">Gaelyk</a> application.
-            </p>
-
-            <p>
-                <a href="/datetime" class="btn btn-primary btn-large">Show current time &raquo;</a>
-            </p>
         </div>
         <div class="row">
             <div class="col-md-4">
                 <h2>Today's weather:</h2>
                 <p>Well, maybe 'today'.</p>
-                <canvas id="myCanvas">Your browser does not support the HTML5 canvas tag.</canvas>
+                <div>
+                    <div class="content-loading"></div>
+                    <canvas id="myCanvas">Your browser does not support the HTML5 canvas tag.</canvas>
+                </div>
             </div>
         </div>
     </body>
@@ -40,7 +45,7 @@
     var c=document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
     // ctx.fillStyle="red";
-    ctx.fillRect(0,0,300,200);
+    ctx.fillRect(0,0,300,150);
 
     function update(imgInfo) {
 
@@ -65,6 +70,8 @@
 
         //console.log(imageData)
         ctx.putImageData(imageData,0,0);
+
+        jQuery(".content-loading").hide()
 
         var dataURL = c.toDataURL();
 
