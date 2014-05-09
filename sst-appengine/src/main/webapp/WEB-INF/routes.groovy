@@ -1,5 +1,5 @@
 
-get "/", forward: "/WEB-INF/pages/index.gtpl"
+get "/", forward: "/index.html"// "/WEB-INF/pages/index.gtpl"
 
 get "/datetime", forward: "/datetime.groovy"
 

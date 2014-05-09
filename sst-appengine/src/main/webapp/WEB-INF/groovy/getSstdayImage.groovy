@@ -3,14 +3,36 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory
 import com.google.appengine.labs.repackaged.org.json.JSONObject
 import data.SSTDay
 import org.apache.commons.lang3.time.StopWatch
+import services.LogService
+
+import java.nio.ByteBuffer
+
+//////////////////////////////////////////
 
 final String analysed_sst = params.analysed_sst ?: "[0:1:0][0:1:5][0:1:10]"
+
+StopWatch timer = new StopWatch()
+timer.start()
+
+new LogService(this).test()
 
 //BlobstoreServiceFactory.getBlobstoreService()
 //BlobKey blob = analysed_sst as BlobKey
 //blobstore.getUploads request
 
-SSTDay day = SSTDay.get(analysed_sst)
+String analKey = "${analysed_sst}.analysd_sst"
+List<List<Integer>> analysedSst = memcache.get(analKey)
+
+log.info("memcache.analysedSst.get in ${timer.time}ms")
+
+if( !analysedSst ) {
+    analysedSst = SSTDay.get(analysed_sst)?.analysedSst
+}
+if( analysedSst ){
+    memcache.put(analKey, analysedSst)
+} else {
+    throw new RuntimeException("No image data found for sst: $analysed_sst")
+}
 
 // These attributes populated in DAS, and probably should be read from there!
 double SCALE_FACTOR = 0.01D;
@@ -43,7 +65,7 @@ int EMPTY_VAL = -32768;
 //List<String> lines = new ArrayList<String>();
 List<Integer> pixels = [];
 
-for( List<Short> lat : day.analysedSst ) {
+for( List<Short> lat : analysedSst ) {
     String line = "";
     for( short val : lat ) {
         //short val = values.getValue(index);
@@ -64,8 +86,18 @@ for( List<Short> lat : day.analysedSst ) {
 
 //////////////////////////////////////////////
 
-def result = new JSONObject([width: day.analysedSst[0].size(), height: day.analysedSst.size(), data: pixels])
-println result.toString()
+byte[] pixel_array = [0xFF, 0, 0, 0xFF, 0, 0, 0xFF, 0, 0, 0xa, 0, 0, 0xFF, 0, 0]
+ByteBuffer buffer = ByteBuffer.allocate(255)
+0..254.each {
+    buffer.putInt(0xFF0000)
+}
+byte[] bytes = buffer.array();
+for (byte b : bytes) {
+  // sout.format("0x%x ", b);
+}
+String result = Base64Encoder.encode(pixel_array)// new JSONObject(.toString())//  new JSONObject([width: day.analysedSst[0].size(), height: day.analysedSst.size(), data: pixels])
+
+println result
 
 ///////////////////////////////////////////////
 

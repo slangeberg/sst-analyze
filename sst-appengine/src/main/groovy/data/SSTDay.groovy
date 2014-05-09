@@ -2,11 +2,14 @@ package data
 
 import com.google.appengine.labs.repackaged.org.json.JSONArray
 import com.google.appengine.repackaged.org.joda.time.LocalDateTime
+import groovyx.gaelyk.GaelykBindings
 import groovyx.gaelyk.datastore.Entity
 import groovyx.gaelyk.datastore.Key
 import groovyx.gaelyk.datastore.Unindexed
 import groovyx.gaelyk.datastore.Ignore
 import org.apache.commons.lang3.time.StopWatch
+
+import java.util.logging.Logger
 
 /* Example - src:
 http://thredds.jpl.nasa.gov/thredds/dodsC/sea_surface_temperature/ALL_UKMO-L4HRfnd-GLOB-OSTIA_v01-fv02.nc.ascii?analysed_sst[0:1:0][0:1:1][0:1:1]
@@ -36,8 +39,14 @@ analysed_sst.lat[2]
 analysed_sst.lon[2]
 -179.975, -179.925
  */
+//@GaelykBindings //<-- Psshht... used for plugins! Instantiate your bean/service in binding {}
 @Entity(unindexed=false)
-class SSTDay {
+class SSTDay {//implements Serializable {
+
+//    static final long serialVersionUID = 1L;
+
+    final Logger log = Logger.getLogger(this.class.name)
+
     @Key String analysedSSTKey //[time][lat][lon]
 
     String dataset
@@ -52,6 +61,8 @@ class SSTDay {
     public SSTDay() {}
 
     public SSTDay(String analysedSSTKey, SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader reader){
+        log = Logger.getLogger(getClass().name)
+
         this.analysedSSTKey = analysedSSTKey
         this.dataset = reader.dataset
         this.analysedSstValue = reader.analysedSst
@@ -76,7 +87,8 @@ class SSTDay {
             // sst service populates world upside down
             Collections.reverse(analysedSst)
         }
-        println "getAnalysedSst() - time: ${timer.time}ms"
+
+        log.info "getAnalysedSst() - time: ${timer.time}ms"
         return analysedSst
     }
 }
