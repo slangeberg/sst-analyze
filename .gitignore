@@ -1,7 +1,8 @@
+Thumbs.db
+
 *.iml
 
 **/build/
 **/.gradle/
 **/data-backup/
-
-**/target
+**/target 
