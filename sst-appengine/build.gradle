@@ -2,9 +2,17 @@ apply plugin: 'war'
 apply plugin: 'gaelyk'
 apply plugin: 'appengine-geb'
 
+apply plugin: 'rebel'
+
+//////////////////
+
 def compatibilityVersion = 1.7
 sourceCompatibility = compatibilityVersion
 targetCompatibility = compatibilityVersion
+
+war.dependsOn(generateRebel)
+
+///////////////////
 
 buildscript {
     repositories {
@@ -15,6 +23,8 @@ buildscript {
     dependencies {
         classpath 'org.gradle.api.plugins:gradle-gaelyk-plugin:0.6'
         classpath 'org.gradle.api.plugins:gradle-appengine-geb-plugin:0.4'
+
+        classpath group: 'org.zeroturnaround', name: 'gradle-jrebel-plugin', version: '1.1.2'
     }
 }
 

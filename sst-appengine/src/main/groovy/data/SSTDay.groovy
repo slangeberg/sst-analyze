@@ -91,4 +91,9 @@ class SSTDay {//implements Serializable {
 //        log.info "getAnalysedSst() - time: ${timer.time}ms"
         return analysedSst
     }
+
+    @Override
+    public String toString(){
+        return "[SSTDay - analysedSSTKey: $analysedSSTKey, dateTime: $dateTime]"
+    }
 }

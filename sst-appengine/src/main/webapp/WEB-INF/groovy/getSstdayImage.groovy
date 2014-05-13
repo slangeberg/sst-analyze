@@ -20,7 +20,11 @@ new LogService(this).test()
 //BlobKey blob = analysed_sst as BlobKey
 //blobstore.getUploads request
 
-String analKey = "${analysed_sst}.analysd_sst"
+
+SSTDay day = SSTDay.get(analysed_sst)
+log.info "found day: $day"
+
+String analKey = "${analysed_sst}.analysed_sst"
 String analPixelsKey = "${analKey}.pixels"
 List<Integer> pixels = memcache.get(analPixelsKey)
 List<List<Integer>> analysedSst = memcache.get(analKey)
@@ -40,17 +44,6 @@ if( !pixels ) {
 }
 
 //////////////////////////////////////////////
-
-//byte[] pixel_array = [0xFF, 0, 0, 0xFF, 0, 0, 0xFF, 0, 0, 0xa, 0, 0, 0xFF, 0, 0]
-//ByteBuffer buffer = ByteBuffer.allocate(255)
-//0..254.each {
-//    buffer.putInt(0xFF0000)
-//}
-//byte[] bytes = buffer.array();
-//for (byte b : bytes) {
-//  // sout.format("0x%x ", b);
-//}
-//String result = Base64Encoder.encode(pixel_array)// new JSONObject(.toString())//  new JSONObject([width: day.analysedSst[0].size(), height: day.analysedSst.size(), data: pixels])
 
 JSONObject result = new JSONObject([width: analysedSst[0].size(), height: analysedSst.size(), data: pixels])
 
