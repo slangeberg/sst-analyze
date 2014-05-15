@@ -1,13 +1,19 @@
-List<List<Integer>> latitude = [[1,2,3]]
+import data.SSTDay
 
-Integer id = (params.id ?: null) as Integer
+///
 
-log.info("id: $id")
+log.info("params.analysed_sst: ${params.analysed_sst}")
 
-def value = id ? latitude[0][id] : latitude[0]
+List<SSTDay> days = []
 
-html.html {
-    body {
-        p "You've got latitude: $value"
+if( params.analysed_sst ) {
+    days = [SSTDay.get(params.analysed_sst)]
+} else {
+    days = SSTDay.findAll()
+}
+
+html.div {
+    days.each { SSTDay day ->
+        a href: "/sstday/${day.analysedSSTKey}", "${day.analysedSSTKey}"
     }
 }

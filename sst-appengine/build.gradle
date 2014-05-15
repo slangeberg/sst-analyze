@@ -47,6 +47,12 @@ appengine {
         }
     }
 }
+rebel {
+    // gaelyk handles loading web elements
+    web {
+        omitDefault = true
+    }
+}
 
 repositories {
    // flatDir name:'ExternalJars', dirs:'./lib'
