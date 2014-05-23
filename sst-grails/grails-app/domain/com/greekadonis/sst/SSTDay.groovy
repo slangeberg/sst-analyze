@@ -35,7 +35,7 @@ class SSTDay {
     static hasMany = [latitudes: SSTDayLatitude]
 
 //    String dataset
-////    LocalDateTime dateTime
+    Date time
 //    List<Double> lat
 //    List<Double> lon
 //

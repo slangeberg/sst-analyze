@@ -2,9 +2,13 @@ package com.greekadonis.sst
 
 class SSTDayLatitude {
 
+    static belongsTo = [day:SSTDay]
     static hasMany = [longitudes: SSTDayLongitude]
 
-//    static belongsTo = [day:SSTDayValue]
-
     Double lat
+
+    @Override
+    String toString() {
+        "[SSTDayLatitude - lat: $lat, day: $day]"
+    }
 }

@@ -3,6 +3,8 @@ package com.greekadonis.sst
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
+import java.text.DateFormat
+
 /**
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
  */
@@ -56,4 +58,6 @@ class SSTDaySpec extends Specification {
         expect:
         SSTDay.get(1).latitudes[0].longitudes.size() == longitudes.size()
     }
+
+
 }
