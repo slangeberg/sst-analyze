@@ -30,12 +30,17 @@ analysed_sst.lon[2]
  */
 class SSTDay {
 
-//    static constraints = { }
+    static constraints = {
+        time unique: true
+    }
 
     static hasMany = [latitudes: SSTDayLatitude]
 
 //    String dataset
+
+//--> TOdo: Update to Joda plugin!
     Date time
+
 //    List<Double> lat
 //    List<Double> lon
 //
