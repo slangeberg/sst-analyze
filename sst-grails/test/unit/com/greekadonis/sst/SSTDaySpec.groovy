@@ -43,7 +43,7 @@ class SSTDaySpec extends Specification {
         SSTDay.get(1).latitudes.size() == latitudes.size()
     }
 
-    void "Can persist day with latitand longitude entrieslues"() {
+    void "Can persist day with latitude and longitude entries"() {
 
         def longitudes = [
             new SSTDayLongitude()
