@@ -26,38 +26,20 @@ class SSTDaySpec extends Specification {
 //--> NOw do real query to fetch latitudes between x and y
 //    --> then get latitudes between x and y for days between a and b ??
 
-    void "Can persist day with latitude entries"() {
+    void "Can query latitudes"() {
 
-        List<SSTDayLatitude> latitudes = [
-            new SSTDayLatitude(),
-            new SSTDayLatitude(),
-            new SSTDayLatitude(),
-            new SSTDayLatitude(),
-            new SSTDayLatitude(),
-            new SSTDayLatitude(),
-            new SSTDayLatitude()
-        ]
+        SSTDay day = new SSTDay(time: new Date(2006, 04, 03))
+            .addToLatitudes(new SSTDayLatitude(lat: 0.5))
+            .addToLatitudes(new SSTDayLatitude(lat: 10.0))
+            .addToLatitudes(new SSTDayLatitude(lat: 15.0))
+            .addToLatitudes(new SSTDayLatitude(lat: 25.0))
+            .save(flush: true, failOnError: true)
 
-        SSTDay day = new SSTDay(latitudes: latitudes)
-        day.save()
+        def query = SSTDayLatitude.where {
+            lat > 5 && lat < 20
+        }
 
         expect:
-        SSTDay.get(1).latitudes.size() == latitudes.size()
+        query.findAll().size() == 1
     }
-
-    void "Can persist day with latitude and longitude entries"() {
-
-        def longitudes = [
-            new SSTDayLongitude()
-        ]
-        SSTDay day = new SSTDay(latitudes: [
-            new SSTDayLatitude(longitudes: longitudes)
-        ])
-        day.save()
-
-        expect:
-        SSTDay.get(1).latitudes[0].longitudes.size() == longitudes.size()
-    }
-
-
 }
