@@ -13,6 +13,7 @@ import java.text.DateFormat
 
 //awaiting update for test mixin
 //@TestMixin(HibernateTestMixin)
+@TestFor(SSTDay)
 class SSTDaySpec extends Specification {
 //    def setup() {
 //    }
@@ -20,7 +21,9 @@ class SSTDaySpec extends Specification {
 //    def cleanup() {
 //    }
 
-    void "Someday i will test thee..."() {}
+    void "Someday i will test thee"() {
+        expect: new SSTDay() != null
+    }
 
 //    void "Can persist day"() {
 //        new SSTDay().save()
