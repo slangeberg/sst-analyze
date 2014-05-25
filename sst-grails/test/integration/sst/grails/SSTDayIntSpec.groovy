@@ -25,13 +25,13 @@ class SSTDayIntSpec extends Specification {
             ])
             .save(flush: true)
 
-        expect:
         SSTDayLatitude found = SSTDayLatitude.where {
             day.time > new Date(2006, 04, 03)
             //, "2006-04-02T00:00:00Z", "2006-04-03T00:00:00Z", "2006-04-04T00:00:00Z", "2006-04-05T00:00:00Z")
         }.find()
 
-        day == found
+        expect:
+        day.time == found.day.time
     }
 
     void "Can query latitudes"() {
@@ -48,6 +48,9 @@ class SSTDayIntSpec extends Specification {
         }
 
         expect:
-        query.findAll().size() == 1
+        List all = query.findAll() as List
+        all.size() == 2
+        all[0].lat == 10
+        all[1].lat == 15
     }
 }
