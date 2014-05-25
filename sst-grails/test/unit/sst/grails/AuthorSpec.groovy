@@ -1,13 +1,17 @@
 package sst.grails
 
 import grails.test.mixin.TestFor
+import grails.test.mixin.TestMixin
 import spock.lang.Specification
 
-/**
- * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
- */
-@TestFor(Author)
+import grails.test.mixin.hibernate.*
+
+@TestMixin(HibernateTestMixin)
 class AuthorSpec extends Specification {
+
+    def setupSpec() {
+        hibernateDomain([Author])
+    }
 
     def setup() {
     }
@@ -15,8 +19,8 @@ class AuthorSpec extends Specification {
     def cleanup() {
     }
 
-    void "Can persist"() {
+    void "Can count"() {
         expect:
-        Author.count() == 10
+        Author.count() == 0
     }
 }
