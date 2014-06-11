@@ -26,12 +26,4 @@ class SSTDayController {
 
         render value
     }
-
-
-    def test = {
-
-        log.info "sstday.count: ${SSTDay.count()}, sstdaylat.count: ${SSTDayLatitude.count()}"
-
-        render query.findAll()
-    }
 }

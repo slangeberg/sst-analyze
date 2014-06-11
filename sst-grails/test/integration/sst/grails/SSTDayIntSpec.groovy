@@ -8,11 +8,6 @@ import spock.lang.*
 
 class SSTDayIntSpec extends Specification {
 
-//    def setup() {
-//    }
-//
-//    def cleanup() {
-//    }
     void "Can query latitude by day"() {
 
         SSTDay day = new SSTDay(time: new Date(2006, 04, 03))
@@ -20,8 +15,11 @@ class SSTDayIntSpec extends Specification {
             .save(flush: true, failOnError: true)
 
         SSTDayLatitude found = SSTDayLatitude.where {
-            day.time > new Date(2006, 04, 03)
-            //, "2006-04-02T00:00:00Z", "2006-04-03T00:00:00Z", "2006-04-04T00:00:00Z", "2006-04-05T00:00:00Z")
+            day.time > new Date(2006, 04, 02)
+            //, "2006-04-02T00:00:00Z",
+            // "2006-04-03T00:00:00Z",
+            // "2006-04-04T00:00:00Z",
+            // "2006-04-05T00:00:00Z")
         }.find()
 
         expect:
@@ -38,13 +36,12 @@ class SSTDayIntSpec extends Specification {
             .save(flush: true, failOnError: true)
 
         def query = SSTDayLatitude.where {
-            lat > 5 && lat < 20
+            lat > 10 && lat < 25
         }
 
         expect:
         Set all = query.findAll()
-        all.size() == 2
-        all[0].lat == 10
-        all[1].lat == 15
+        all.size() == 1
+        all[0].lat == 15
     }
 }
