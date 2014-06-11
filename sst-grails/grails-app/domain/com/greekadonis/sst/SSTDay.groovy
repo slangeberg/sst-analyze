@@ -1,6 +1,6 @@
 package com.greekadonis.sst
 
-import grails.compiler.GrailsCompileStatic
+//import grails.compiler.GrailsCompileStatic
 
 /* Example - src:
 http://thredds.jpl.nasa.gov/thredds/dodsC/sea_surface_temperature/ALL_UKMO-L4HRfnd-GLOB-OSTIA_v01-fv02.nc.ascii?analysed_sst[0:1:0][0:1:1][0:1:1]
@@ -30,7 +30,7 @@ analysed_sst.lat[2]
 analysed_sst.lon[2]
 -179.975, -179.925
  */
-@GrailsCompileStatic
+//@GrailsCompileStatic
 class SSTDay {
 
     static constraints = {
@@ -50,4 +50,9 @@ class SSTDay {
 //    public String toString() {
 //        "[SSTDay - id: $id]"
 //    }
+
+    @Override
+    String toString() {
+        "[SSTDay - time: $time, latitudes.size(): ${latitudes ? latitudes.size() : 'NULL'}]"
+    }
 }

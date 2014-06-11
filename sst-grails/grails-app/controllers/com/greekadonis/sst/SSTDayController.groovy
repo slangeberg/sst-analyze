@@ -17,8 +17,10 @@ class SSTDayController {
     }
 
     def data = {
-        def sst = dataReaderService.analysedSST
-        def value = sst.substring(sst.length()-1000, sst.length())
+//        def sst = dataReaderService.analysedSST
+        def day = dataReaderService.day
+        def value = day.toString()
+            // sst.substring(sst.length()-1000, sst.length())
 
         log.info "data() - value: $value"
 

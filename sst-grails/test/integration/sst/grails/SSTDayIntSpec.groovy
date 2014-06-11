@@ -15,15 +15,9 @@ class SSTDayIntSpec extends Specification {
 //    }
     void "Can query latitude by day"() {
 
-        def longitudes = [
-            new SSTDayLongitude()
-        ]
-        SSTDay day = new SSTDay(
-            time: new Date(2006, 04, 03), //"yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-            latitudes: [
-                new SSTDayLatitude(lat: 20.5, longitudes: longitudes)
-            ])
-            .save(flush: true)
+        SSTDay day = new SSTDay(time: new Date(2006, 04, 03))
+            .addToLatitudes(new SSTDayLatitude(lat: 20.5))
+            .save(flush: true, failOnError: true)
 
         SSTDayLatitude found = SSTDayLatitude.where {
             day.time > new Date(2006, 04, 03)
@@ -48,7 +42,7 @@ class SSTDayIntSpec extends Specification {
         }
 
         expect:
-        List all = query.findAll() as List
+        Set all = query.findAll()
         all.size() == 2
         all[0].lat == 10
         all[1].lat == 15

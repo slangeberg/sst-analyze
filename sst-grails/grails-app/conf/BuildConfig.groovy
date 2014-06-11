@@ -37,11 +37,13 @@ grails.project.dependency.resolution = {
     repositories {
         inherits true // Whether to inherit repository definitions from plugins
 
+        mavenLocal()
+        mavenCentral()
+
         grailsPlugins()
         grailsHome()
-        mavenLocal()
         grailsCentral()
-        mavenCentral()
+
         // uncomment these (or add new ones) to enable remote dependency resolution from public Maven repositories
         //mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"
@@ -53,6 +55,7 @@ grails.project.dependency.resolution = {
         // runtime 'mysql:mysql-connector-java:5.1.29'
         // runtime 'org.postgresql:postgresql:9.3-1101-jdbc41'
 
+        compile 'org.apache.commons:commons-lang3:3.3.2'
         compile "org.springframework:spring-orm:$springVersion"
     }
 

@@ -15,16 +15,21 @@ class DataReaderServiceSpec extends Specification {
     def cleanup() {
     }
 
-    void "Can get file"() {
-        expect: new DataReaderService().getFile() != null
+    void "Can get SST from file"(){
+//        def sst = service.getAnalysedSST()
+//
+//        println "sst: $sst"
+//
+//        expect:
+//        sst != null
     }
 
-    void "Can get SST from file"(){
-        def sst = new DataReaderService().getAnalysedSST()
-
-        log.info "sst: $sst"
-
-        expect:
-        sst != null
+    void "Can get SSTDay from file"(){
+//        def sst = service.getDay()
+//
+//        println "sst: $sst"
+//
+//        expect:
+//        sst != null
     }
 }
