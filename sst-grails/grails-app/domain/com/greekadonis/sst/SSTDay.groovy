@@ -53,6 +53,6 @@ class SSTDay {
 
     @Override
     String toString() {
-        "[SSTDay - time: $time, latitudes.size(): ${latitudes ? latitudes.size() : 'NULL'}]"
+        "[SSTDay - id: $id, time: $time, latitudes.size(): ${latitudes ? latitudes.size() : 'NULL'}]"
     }
 }

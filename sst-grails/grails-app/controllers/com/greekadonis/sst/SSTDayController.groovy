@@ -1,13 +1,15 @@
 package com.greekadonis.sst
 
+import com.greekadonis.sst.services.DataLoaderService
 import com.greekadonis.sst.services.DataReaderService
 import grails.gorm.DetachedCriteria
 
 class SSTDayController {
     static scaffold = true
 
-    DataReaderService dataReaderService
-
+   // DataReaderService dataReaderService
+    DataLoaderService dataLoaderService
+    
     def day = {
         if( params.id ){
             render "id: ${params.id}, day: ${SSTDay.get(params.id)}"
@@ -16,14 +18,20 @@ class SSTDayController {
         }
     }
 
-    def data = {
-//        def sst = dataReaderService.analysedSST
-        def day = dataReaderService.day
-        def value = day.toString()
-            // sst.substring(sst.length()-1000, sst.length())
+//    def data = {
+////        def sst = dataReaderService.analysedSST
+//        def day = dataReaderService.day
+//        def value = day.toString()
+//            // sst.substring(sst.length()-1000, sst.length())
+//
+//        log.info "data() - value: $value"
+//
+//        render value
+//    }
+    
+    def remote = {
+        log.info("remote() - ")
 
-        log.info "data() - value: $value"
-
-        render value
+        render "day: ${dataLoaderService.loadDay()}"
     }
 }

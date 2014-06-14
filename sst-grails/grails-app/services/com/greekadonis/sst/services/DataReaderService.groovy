@@ -14,6 +14,9 @@ class DataReaderService {
     }
 
     SSTDay getDay() {
+        getDay(false)
+    }
+    SSTDay getDay(boolean remote) {
         getReader().day
     }
 
@@ -39,7 +42,7 @@ class DataReaderService {
         StopWatch timer = new StopWatch()
         timer.start()
 
-        String base = "C:\\data\\lci\\sst\\data"
+        String base =  "C:\\data\\lci\\sst\\data"
         String name = "ALL_UKMO-L4HRfnd-GLOB-OSTIA_v01-fv02.nc.ascii_analysed_sst[0.1.0][0.10.3599][0.10.7199].txt"
         //ALL_UKMO-L4HRfnd-GLOB-OSTIA_v01-fv02.nc.ascii_analysed_sst[0.1.0][0.2.3599][0.2.7199].txt
 
