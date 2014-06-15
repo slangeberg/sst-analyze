@@ -16,20 +16,20 @@ class DataReaderServiceSpec extends Specification {
     }
 
     void "Can get SST from file"(){
-//        def sst = service.getAnalysedSST()
-//
-//        println "sst: $sst"
-//
-//        expect:
-//        sst != null
+        def sst = service.getAnalysedSST()
+
+        println "sst: $sst"
+
+        expect:
+        sst != null
     }
 
     void "Can get SSTDay from file"(){
-//        def sst = service.getDay()
-//
-//        println "sst: $sst"
-//
-//        expect:
-//        sst != null
+        def sst = service.getDay()
+
+        println "sst: $sst"
+
+        expect:
+        sst != null
     }
 }
