@@ -21,3 +21,5 @@ Thumbs.db
 **/web-app/WEB-INF/classes
 **/.link_to_grails_plugins/
 **/target-eclipse/
+
+data/
