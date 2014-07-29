@@ -1,5 +1,6 @@
-package com.greekadonis.sst
+package com.greekadonis.sst.services
 
+import com.greekadonis.sst.SSTDay
 import com.greekadonis.sst.services.SSTDayService
 import grails.test.mixin.TestFor
 import org.joda.time.LocalDate

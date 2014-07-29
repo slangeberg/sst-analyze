@@ -1,4 +1,4 @@
-package com.greekadonis.sst.day.catchup
+package com.greekadonis.sst.catchup
 
 import grails.test.mixin.TestFor
 import spock.lang.Specification
@@ -6,8 +6,8 @@ import spock.lang.Specification
 /**
  * See the API for {@link grails.test.mixin.domain.DomainClassUnitTestMixin} for usage instructions
  */
-@TestFor(CatchupState)
-class CatchupStateSpec extends Specification {
+@TestFor(CatchupProcessState)
+class CatchupProcessStateSpec extends Specification {
 
     def setup() {
     }
@@ -15,7 +15,6 @@ class CatchupStateSpec extends Specification {
     def cleanup() {
     }
 
-    void "Can read first day"() {
-      //when: CatchupState.find
+    void "test something"() {
     }
 }

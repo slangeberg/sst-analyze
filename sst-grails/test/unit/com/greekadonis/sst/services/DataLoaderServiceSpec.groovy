@@ -16,5 +16,6 @@ class DataLoaderServiceSpec extends Specification {
     }
 
     void "test something"() {
+      expect: "hi"
     }
 }

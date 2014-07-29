@@ -16,5 +16,6 @@ class SSTDayServiceSpec extends Specification {
   }
 
   void "test something"() {
+    expect: "hey"
   }
 }
