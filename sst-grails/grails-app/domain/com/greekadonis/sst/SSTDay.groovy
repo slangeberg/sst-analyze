@@ -3,6 +3,7 @@ package com.greekadonis.sst
 //import grails.compiler.GrailsCompileStatic
 
 /* Example - src:
+http://thredds.jpl.nasa.gov/thredds/dodsC/sea_surface_temperature/ALL_UKMO-L4HRfnd-GLOB-OSTIA_v01-fv02.nc.html
 http://thredds.jpl.nasa.gov/thredds/dodsC/sea_surface_temperature/ALL_UKMO-L4HRfnd-GLOB-OSTIA_v01-fv02.nc.ascii?analysed_sst[0:1:0][0:1:1][0:1:1]
 --------------------------------------------------
 
@@ -35,14 +36,17 @@ class SSTDay {
 
     static constraints = {
         time unique: true
+        sstIndex unique: true
     }
 
     static hasMany = [latitudes: SSTDayLatitude]
 
 //    String dataset
 
-//--> TOdo: Update to Joda plugin!
+//--> Todo: Update to Joda plugin!
     Date time
+
+    int sstIndex //index for day in JPL labs datasets
 
 //    List<Double> lat
 //    List<Double> lon

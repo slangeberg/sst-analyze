@@ -8,14 +8,6 @@ import org.springframework.transaction.annotation.Propagation
 
 import javax.servlet.ServletResponse
 
-
-//import com.google.appengine.api.urlfetch.HTTPResponse
-//import data.SSTDay
-//
-//import data.SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader
-//
-//import org.apache.commons.lang3.time.StopWatch
-
 @Transactional(propagation = Propagation.SUPPORTS)
 class DataLoaderService {
 

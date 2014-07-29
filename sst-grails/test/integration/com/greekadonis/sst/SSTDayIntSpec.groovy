@@ -1,4 +1,4 @@
-package sst.grails
+package com.greekadonis.sst
 
 import com.greekadonis.sst.SSTDay
 import com.greekadonis.sst.SSTDayLatitude
