@@ -8,7 +8,7 @@ import org.apache.commons.lang3.time.StopWatch
 @Transactional
 class CatchupService {
 
-  def sstDayService
+  def dataLoaderService
 
   def runCatchup(){
     boolean isRunning = catchupRunning()
@@ -23,17 +23,19 @@ class CatchupService {
 
 //--> TODO: Don't hard-code upper limit!!
 
+      SSTDay day
+
       for( i in 0..4000 ) {
-        SSTDay day = sstDayService.findBySstIndex(i)
+        day = dataLoaderService.loadDay(i)
         if( !day ){
           log.debug "Day missing at index: ${i}, check for file"
-
+          throw new RuntimeException("Unable to fetch data for day @ $i")
         }
       }
 
       log.info "runCatchup() - went thru days in ${timer.time}ms"
 
-      return "...."
+      return "Last loaded day: $day"
     }
   }
 
