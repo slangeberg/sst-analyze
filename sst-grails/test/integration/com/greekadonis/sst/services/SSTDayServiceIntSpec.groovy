@@ -1,13 +1,12 @@
 package com.greekadonis.sst.services
 
 import com.greekadonis.sst.SSTDay
-import com.greekadonis.sst.services.SSTDayService
 import grails.test.mixin.TestFor
 import org.joda.time.LocalDate
 import spock.lang.Specification
 
-@TestFor(SSTDayService)
-class SSTDayServiceIntSpec extends Specification {
+@TestFor(SstDayService)
+class SstDayServiceIntSpec extends Specification {
 
     void "First loaded day is null, if no days populated"() {
 

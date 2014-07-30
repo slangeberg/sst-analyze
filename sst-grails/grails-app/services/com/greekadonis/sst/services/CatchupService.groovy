@@ -10,12 +10,17 @@ class CatchupService {
   def sstDayService
 
   def runCatchup(){
-    if( !catchupRunning() ){
+    boolean isRunning = catchupRunning()
+    log.debug("runCatchup() - isRunning: $isRunning")
+
+    if( !isRunning ){
       //start one
-      log.info("runCatchup() - Catchup is not running. Next step: TBD!!")
-      throw new RuntimeException("TBD")
+      //throw new RuntimeException("TBD")
 
       //-- determine index to start with, homey!!
+
+      List<SSTDay> days = sstDayService.findAllOrderedBySSTIndex()
+      return days
     }
   }
 
