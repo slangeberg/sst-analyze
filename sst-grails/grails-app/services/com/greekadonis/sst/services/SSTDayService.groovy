@@ -5,9 +5,12 @@ import grails.transaction.Transactional
 
 @Transactional
 class SstDayService {
-
-  List<SSTDay> findAllOrderedBySSTIndex() {
-    SSTDay.list(order: 'asc', sort: 'sstIndex')
+//
+//  List<SSTDay> findAllOrderedBySSTIndex() {
+//    SSTDay.list(order: 'asc', sort: 'sstIndex')
+//  }
+  List<SSTDay> findBySstIndex(int index) {
+    SSTDay.where{ sstIndex == index }.find()
   }
 
   SSTDay findFirstLoadedDay() {

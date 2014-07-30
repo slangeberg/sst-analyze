@@ -6,19 +6,41 @@ import grails.transaction.Transactional
 import org.apache.commons.lang3.time.StopWatch
 import org.springframework.transaction.annotation.Propagation
 
-import javax.servlet.ServletResponse
+/**
+ * Tries to load SSTDay related data in following order:
+ * 1. DB
+ * 2. File extract
+ * 3. Remote dataset
+ */
 
 @Transactional(propagation = Propagation.SUPPORTS)
 class DataLoaderService {
 
+    String latParams = '[0:1:5]'
+    String lonParams = '[0:1:10]'
 
-////////////////////////
+    def sstDayService
 
+  /**
+   * @return Day 0 - the first day
+   */
     SSTDay loadDay(){
-        loadDay("[0:1:0][0:1:5][0:1:10]")
+        loadDay(0)
     }
 
-    SSTDay loadDay(String analysed_sst) {
+  /**
+   * @param sstIndex - 0-based index for 'time' component. eg: sstIndex == 0 is the first day
+   * @return
+   */
+    SSTDay loadDay( int sstIndex ){
+        SSTDay day = sstDayService.findBySstIndex(sstIndex)
+        if( !day ){
+          day = loadDayFromRemoteSource("[$sstIndex]$latParams$lonParams")
+        }
+        day
+    }
+
+    SSTDay loadDayFromRemoteSource(String analysed_sst) {
         //[time][lat][lon]
         //final String analysed_sst = params.analysed_sst ?:
 
@@ -27,7 +49,7 @@ class DataLoaderService {
         String analysedSSTUrl = "$baseUrl?analysed_sst"
         String url = "$analysedSSTUrl$analysed_sst"
 
-        log.info("url: $url")
+        log.info("loadDayFromRemoteSource() - url: $url")
 
         ///
 
@@ -62,14 +84,14 @@ class DataLoaderService {
 //                throw new RuntimeException("Remote fetch for analysed_sst: $analysed_sst failed with message: ${response.text}")
 //            }
 
-            log.info("analysed_sst: $analysed_sst, response time: ${timer.getTime()}ms")
+            log.info("loadDayFromRemoteSource() - analysed_sst: $analysed_sst, response time: ${timer.getTime()}ms")
 
             SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader reader =
                     new SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader(content) //response.text)
             day = reader.getDay() //analysed_sst)
 //        }
 
-        log.info("analysed_sst: $analysed_sst, total time: ${timer.getTime()}ms")
+        log.info("loadDayFromRemoteSource() - analysed_sst: $analysed_sst, total time: ${timer.getTime()}ms")
 
         day
     }

@@ -3,6 +3,7 @@ package com.greekadonis.sst.services
 import com.greekadonis.sst.SSTDay
 import com.greekadonis.sst.catchup.CatchupProcessState
 import grails.transaction.Transactional
+import org.apache.commons.lang3.time.StopWatch
 
 @Transactional
 class CatchupService {
@@ -15,12 +16,24 @@ class CatchupService {
 
     if( !isRunning ){
       //start one
-      //throw new RuntimeException("TBD")
 
-      //-- determine index to start with, homey!!
+      StopWatch timer = new StopWatch()
+      timer.start()
 
-      List<SSTDay> days = sstDayService.findAllOrderedBySSTIndex()
-      return days
+
+//--> TODO: Don't hard-code upper limit!!
+
+      for( i in 0..4000 ) {
+        SSTDay day = sstDayService.findBySstIndex(i)
+        if( !day ){
+          log.debug "Day missing at index: ${i}, check for file"
+
+        }
+      }
+
+      log.info "runCatchup() - went thru days in ${timer.time}ms"
+
+      return "...."
     }
   }
 
