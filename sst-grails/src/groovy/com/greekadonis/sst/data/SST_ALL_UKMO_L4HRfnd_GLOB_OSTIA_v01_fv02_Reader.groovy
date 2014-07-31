@@ -8,57 +8,12 @@ import com.greekadonis.sst.SSTDay
 import org.codehaus.groovy.grails.web.json.JSONArray
 
 import java.util.logging.Logger
-/*
-* See: http://thredds.jpl.nasa.gov/thredds/dodsC/sea_surface_temperature/ALL_UKMO-L4HRfnd-GLOB-OSTIA_v01-fv02.nc.html
-* DDS:
-Dataset {
-    Float32 lat[lat = 3600];
-    Float32 lon[lon = 7200];
-    Grid {
-     ARRAY:
-        Int16 analysed_sst[time = 2951][lat = 3600][lon = 7200];
-     MAPS:
-        String time[time = 2951];
-        Float32 lat[lat = 3600];
-        Float32 lon[lon = 7200];
-    } analysed_sst;
-    Grid {
-     ARRAY:
-        Int16 analysis_error[time = 2951][lat = 3600][lon = 7200];
-     MAPS:
-        String time[time = 2951];
-        Float32 lat[lat = 3600];
-        Float32 lon[lon = 7200];
-    } analysis_error;
-    Grid {
-     ARRAY:
-        Byte sea_ice_fraction[time = 2951][lat = 3600][lon = 7200];
-     MAPS:
-        String time[time = 2951];
-        Float32 lat[lat = 3600];
-        Float32 lon[lon = 7200];
-    } sea_ice_fraction;
-    Grid {
-     ARRAY:
-        Byte mask[time = 2951][lat = 3600][lon = 7200];
-     MAPS:
-        String time[time = 2951];
-        Float32 lat[lat = 3600];
-        Float32 lon[lon = 7200];
-    } mask;
-    String time[time = 2951];
-} sea_surface_temperature%2fALL_UKMO-L4HRfnd-GLOB-OSTIA_v01-fv02%2enc;
- */
+
 
 //@GrailsCompileStatic
 class SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader {
 
     private static final Logger log = Logger.getLogger(SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader.class.name)
-
-    // See: DDS
-    public static final int MAX_TIME = 2951 - 1;
-    public static final int MAX_LAT = 3600 - 1;
-    public static final int MAX_LON = 7200 - 1;
 
     //
     // Takes raw results as returned from SST JPL remote service
