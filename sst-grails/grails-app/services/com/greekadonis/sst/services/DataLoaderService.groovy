@@ -80,10 +80,18 @@ Dataset {
    * @return
    */
   SSTDay loadDay(int sstIndex) {
+
+    StopWatch timer = new StopWatch()
+    timer.start()
+
     SSTDay day = sstDayService.findBySstIndex(sstIndex)
-    if (!day) {
+    if ( day ) {
+      log.info("loadDay($sstIndex) - DB HIT")
+    } else {
+      log.info("loadDay($sstIndex) - DB MISS")
       day = loadDayFromRemoteSource("[$sstIndex]$latParams$lonParams")
     }
+    log.info "loadDay($sstIndex) - time: ${timer.time}ms"
     day
   }
 
@@ -99,10 +107,13 @@ Dataset {
     SSTDay day = loadDayFromLocalFile(analysed_sst)
 
     if ( day ) {
-      assert !day.latitudes.empty
+      log.info('loadDayFromRemoteSource() - cache HIT')
+      assert !day.latitudes?.empty
 
     } else {
       //Check remote source
+
+      log.info('loadDayFromRemoteSource() - cache MISS')
 
       String baseUrl = "http://thredds.jpl.nasa.gov/thredds/dodsC/sea_surface_temperature/$DATA_FILE_NAME"
       String analysedSSTUrl = "$baseUrl?analysed_sst"
@@ -136,7 +147,7 @@ Dataset {
     if( file.isFile() ) {
       String contents = file.text
 
-      println "loadDayFromLocalFile() - file.text - time: ${timer.time}ms"
+//      println "loadDayFromLocalFile() - file.text - time: ${timer.time}ms"
 
       SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader reader =
           new SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader(contents)
@@ -145,17 +156,22 @@ Dataset {
     return null
   }
 
-
-  private File getFile(String analysed_sst) {
-    org.apache.commons.lang.time.StopWatch timer = new org.apache.commons.lang.time.StopWatch()
-    timer.start()
-
+  String getFilePath(String analysed_sst){
     String base = "${System.getProperty("user.dir")}/data"
     String name = "${DATA_FILE_NAME}_analysed_sst${analysed_sst}.txt"
     String path = "$base/$name"
 
     assert !path.contains("null")
 
+    path
+  }
+
+
+  private File getFile(String analysed_sst) {
+    org.apache.commons.lang.time.StopWatch timer = new org.apache.commons.lang.time.StopWatch()
+    timer.start()
+
+    String path = getFilePath(analysed_sst)
     File file = new File(path)
 
     log.info "getFile(): path: $path, file: $file, time: ${timer.time}ms"
@@ -165,16 +181,12 @@ Dataset {
 
   private File writeFile(String analysed_sst, String contents) {
 
-    log.info "writeFile($analysed_sst, ${contents ?: contents.size()})"
+    log.info "writeFile($analysed_sst, contents.size(): ${contents?.size()})"
 
     org.apache.commons.lang.time.StopWatch timer = new org.apache.commons.lang.time.StopWatch()
     timer.start()
 
-    String base = "${System.getProperty("user.dir")}/data"
-    String name = "${DATA_FILE_NAME}_analysed_sst${analysed_sst}.txt"
-    String path = "$base/$name"
-
-    assert !path.contains("null")
+    String path = getFilePath(analysed_sst)
 
     File file = new File(path)
     file.write(contents)

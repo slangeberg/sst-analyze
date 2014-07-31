@@ -20,7 +20,6 @@ class CatchupService {
       StopWatch timer = new StopWatch()
       timer.start()
 
-
 //--> TODO: Don't hard-code upper limit!!
 
       SSTDay day
