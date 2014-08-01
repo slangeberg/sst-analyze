@@ -81,8 +81,7 @@ Dataset {
    */
   SSTDay loadDay(int sstIndex) {
 
-    StopWatch timer = new StopWatch()
-    timer.start()
+    StopWatch timer = createAndStartStopWatch()
 
     SSTDay day = sstDayService.findBySstIndex(sstIndex)
     if ( day ) {
@@ -101,8 +100,7 @@ Dataset {
    */
   SSTDay loadDayFromRemoteSource(String analysed_sst) {
 
-    StopWatch timer = new StopWatch()
-    timer.start()
+    StopWatch timer = createAndStartStopWatch()
 
     SSTDay day = loadDayFromLocalFile(analysed_sst)
 
@@ -134,12 +132,16 @@ Dataset {
       day = reader.getDay() //analysed_sst)
     }
 
-    log.info("loadDayFromRemoteSource() - analysed_sst: $analysed_sst, total time: ${timer.getTime()}ms")
+    log.info("loadDayFromRemoteSource() - analysed_sst: $analysed_sst, time: ${timer.getTime()}ms")
 
     day
   }
 
   SSTDay loadDayFromLocalFile(String analysed_sst) {
+
+    StopWatch timer = createAndStartStopWatch()
+
+    SSTDay day = null
     File file = getFile(analysed_sst)
 
     log.info( "loadDayFromLocalFile($analysed_sst) - file: $file")
@@ -151,14 +153,15 @@ Dataset {
 
       SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader reader =
           new SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader(contents)
-      return reader.day
+      day = reader.day
     }
-    return null
+    log.info( "loadDayFromLocalFile($analysed_sst) - day: $day, in time: ${timer.time}ms")
+    day
   }
 
   String getFilePath(String analysed_sst){
     String base = "${System.getProperty("user.dir")}/data"
-    String name = "${DATA_FILE_NAME}_analysed_sst${analysed_sst}.txt"
+    String name = "${DATA_FILE_NAME}_analysed_sst${analysed_sst.replace(":", ".")}.txt"
     String path = "$base/$name"
 
     assert !path.contains("null")
@@ -168,13 +171,13 @@ Dataset {
 
 
   private File getFile(String analysed_sst) {
-    org.apache.commons.lang.time.StopWatch timer = new org.apache.commons.lang.time.StopWatch()
-    timer.start()
+
+    StopWatch timer = createAndStartStopWatch()
 
     String path = getFilePath(analysed_sst)
     File file = new File(path)
 
-    log.info "getFile(): path: $path, file: $file, time: ${timer.time}ms"
+    log.info "getFile() - file: $file, file.text.size(): ${file?.text?.size()}, time: ${timer.time}ms"
 
     file
   }
@@ -183,8 +186,7 @@ Dataset {
 
     log.info "writeFile($analysed_sst, contents.size(): ${contents?.size()})"
 
-    org.apache.commons.lang.time.StopWatch timer = new org.apache.commons.lang.time.StopWatch()
-    timer.start()
+    StopWatch timer = createAndStartStopWatch()
 
     String path = getFilePath(analysed_sst)
 
@@ -194,5 +196,11 @@ Dataset {
     log.info "writeFile(): path: $path, file: $file, time: ${timer.time}ms"
 
     file
+  }
+
+  StopWatch createAndStartStopWatch() {
+    StopWatch timer = new StopWatch()
+    timer.start()
+    timer
   }
 }

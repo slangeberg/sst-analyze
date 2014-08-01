@@ -1,14 +1,8 @@
 package com.greekadonis.sst.data
 
-//import com.google.appengine.labs.repackaged.org.json.JSONArray
-//import com.google.appengine.labs.repackaged.org.json.JSONObject
 import com.greekadonis.sst.SSTDay
-
-//import grails.compiler.GrailsCompileStatic
+import org.apache.log4j.Logger
 import org.codehaus.groovy.grails.web.json.JSONArray
-
-import java.util.logging.Logger
-
 
 //@GrailsCompileStatic
 class SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader {
@@ -54,7 +48,7 @@ analysed_sst.lon[2]
  */
     public SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader(String rawResult){
 
-        println "SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader()"
+        log.info "SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader()"
 
         this.rawResult = rawResult
 

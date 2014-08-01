@@ -11,7 +11,10 @@ class CatchupController {
 
       } else {
         render {
-          a(href: './run', 'run...')
+          p 'Current process state:'
+          p catchupService.getProcessState()
+          br()
+          a(href: './run', 'Start catchup...')
           br()
           // a( href: './tbd', 'TBD...' )
         }
