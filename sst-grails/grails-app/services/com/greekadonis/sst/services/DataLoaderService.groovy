@@ -88,10 +88,14 @@ Dataset {
       log.info("loadDay($sstIndex) - DB HIT")
     } else {
       log.info("loadDay($sstIndex) - DB MISS")
-      day = loadDayFromRemoteSource("[$sstIndex]$latParams$lonParams")
+      day = loadDayFromRemoteSource(getAnalysedSstParams(sstIndex))
     }
     log.info "loadDay($sstIndex) - time: ${timer.time}ms"
     day
+  }
+
+  String getAnalysedSstParams(int sstIndex){
+    "[$sstIndex]$latParams$lonParams"
   }
 
   /**
@@ -177,7 +181,7 @@ Dataset {
     String path = getFilePath(analysed_sst)
     File file = new File(path)
 
-    log.info "getFile() - file: $file, file.text.size(): ${file?.text?.size()}, time: ${timer.time}ms"
+    log.info "getFile() - file: $file, file.isFile(): ${file.isFile()}, file.text.size(): ${file.isFile() ? file?.text?.size() : 0}, time: ${timer.time}ms"
 
     file
   }

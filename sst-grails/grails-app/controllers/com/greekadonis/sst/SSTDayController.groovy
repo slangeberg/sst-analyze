@@ -2,13 +2,10 @@ package com.greekadonis.sst
 
 import com.greekadonis.gandas.DataFrame
 import com.greekadonis.sst.services.DataLoaderService
-import com.greekadonis.sst.services.DataReaderService
-import grails.gorm.DetachedCriteria
 
 class SSTDayController {
     static scaffold = true
 
-   // DataReaderService dataReaderService
     DataLoaderService dataLoaderService
     
     def day = {
