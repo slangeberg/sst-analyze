@@ -1,7 +1,6 @@
 package com.greekadonis.sst.services
 
 import com.greekadonis.sst.SSTDay
-import com.greekadonis.sst.catchup.CatchupProcessState
 import com.greekadonis.sst.catchup.SstCatchupProcess
 import grails.transaction.Transactional
 import org.apache.commons.lang3.time.StopWatch
@@ -28,7 +27,7 @@ class SstCatchupService {
       StopWatch timer = new StopWatch()
       timer.start()
 
-      SstCatchupProcess process = null
+     // SstCatchupProcess process = null
 
       SSTDay day = null
 
@@ -64,33 +63,29 @@ class SstCatchupService {
           startDate: LocalDateTime.now())
         .save(flush: true, failOnError: true)
 
-//      catchupProcessState.running = true
-//      catchupProcessState.sstIndex = sstIndex
-    //  catchupProcessState.save(failOnError: true, flush: true)
-
       day = dataLoaderService.loadDay(sstIndex) //@NOTE: Potentially long-running
       if (day) {
-//        catchupProcessState.sstIndex = null
-//        catchupProcessState.lastCompletedSSTIndex = sstIndex
-//        catchupProcessState.running = false
-        process.running = false
-        process.save(failOnError: true, flush: true)
+        log.debug "runCatchupForDay() - found day: $day"
+
+        process.success = true
 
       } else {
-        log.debug "Day missing at index: ${sstIndex}, check for file"
-        throw new RuntimeException("Unable to fetch data for day @ $sstIndex")
+
+//--> todo: track why failed?
+        // - someday break process into tasks and track each?
+
+        process.success = false
+
+        log.warn "runCatchupForDay() - Day missing at index: ${sstIndex}, check for file"
       }
-
-//throw new RuntimeException("create row for each process - may get two threads running")
-//track: start / end date/time; sstIndex; can get?: analysed_sst param, file name?
-
-//      catchupProcessState.save(failOnError: true, flush: true)
+      process.running = false
+      process.endDate = LocalDateTime.now()
+      process.save(failOnError: true, flush: true)
     }
     day
   }
 
   boolean catchupRunning() {
-    //return getProcessState().running
     List running = getAllRunning()
     log.info("catchupRunning(): running: $running")
     !running.empty

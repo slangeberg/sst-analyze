@@ -19,10 +19,11 @@ class SstCatchupProcess {
 
   LocalDateTime startDate
   LocalDateTime endDate
+  boolean success
 
   @Override
   public String toString() {
     "[SstCatchupProcess - sstIndex: $sstIndex" \
-      + ", running: $running, startDate: $startDate, endDate: $endDate]"
+      + ", running: $running, startDate: $startDate, endDate: $endDate, success: $success]"
   }
 }
