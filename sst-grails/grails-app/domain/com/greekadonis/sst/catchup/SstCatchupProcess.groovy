@@ -11,6 +11,8 @@ class SstCatchupProcess {
 //    sstIndex nullable: true
 //    analysed_sst nullable: true
     endDate nullable: true
+    startDate format: 'yyyy-MM-dd hh:ss'
+    endDate format: 'yyyy-MM-dd hh:ss'
   }
 
   Integer sstIndex

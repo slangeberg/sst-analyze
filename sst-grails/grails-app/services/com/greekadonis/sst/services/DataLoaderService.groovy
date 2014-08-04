@@ -110,7 +110,6 @@ Dataset {
 
     if ( day ) {
       log.info('loadDayFromRemoteSource() - cache HIT')
-      assert !day.latitudes?.empty
 
     } else {
       //Check remote source

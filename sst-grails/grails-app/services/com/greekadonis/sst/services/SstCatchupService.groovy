@@ -10,6 +10,35 @@ import org.joda.time.LocalDateTime
 class SstCatchupService {
 
   def dataLoaderService
+  def sstDayService
+
+  /**
+   * Catch up next necessary day
+   */
+  def runNext() {
+    boolean isRunning = catchupRunning()
+    log.debug("runCatchup() - isRunning: $isRunning")
+
+    //CatchupProcessState catchupProcessState = getProcessState()
+
+    if( isRunning ){
+      def running = getAllRunning()
+      return "Catchup is already running ${running.size()} processes: <br/>${running}"
+
+    } else {
+      //start one
+
+      StopWatch timer = new StopWatch()
+      timer.start()
+
+      SSTDay day = sstDayService.findLastLoadedDay()
+      day = runCatchupForDay(day ? day.sstIndex + 1 : 0)
+
+      log.info "runCatchup() - went thru days in ${timer.time}ms"
+
+      return "Ran catchup for: $day"
+    }
+  }
 
   def runCatchup(){
     boolean isRunning = catchupRunning()
@@ -39,9 +68,6 @@ class SstCatchupService {
           break
         }
       }
-//      catchupProcessState.running = false
-//      catchupProcessState.save(failOnError: true, flush: true)
-
       log.info "runCatchup() - went thru days in ${timer.time}ms"
 
       return "Last loaded day: $day"
@@ -67,6 +93,15 @@ class SstCatchupService {
       if (day) {
         log.debug "runCatchupForDay() - found day: $day"
 
+        if( !day.id ) {
+          //verify state of day
+          assert day.time
+          assert !day.latitudes?.empty
+          assert !day.latitudes[0].longitudes?.empty
+
+          // All good,   persist
+          day.save(flush: true, failOnError: true)
+        }
         process.success = true
 
       } else {

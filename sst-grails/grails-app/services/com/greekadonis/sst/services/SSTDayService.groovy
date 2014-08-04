@@ -19,4 +19,13 @@ class SstDayService {
     }
     .find()
   }
+
+//--> Todo: Account for any gaps in loaded days!
+
+  SSTDay findLastLoadedDay() {
+    SSTDay.where {
+      sstIndex == max(sstIndex)
+    }
+    .find()
+  }
 }

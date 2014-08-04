@@ -1,5 +1,7 @@
 package com.greekadonis.sst.catchup
 
+import static grails.async.Promises.*
+
 class SstCatchupProcessController {
 
   static scaffold = true
@@ -25,6 +27,15 @@ class SstCatchupProcessController {
   }
 
   def run() {
-    render 'Started catchup: ' + sstCatchupService.runCatchup()
+    task { // just render async for now - async remote request, later?
+      //render 'Started catchup: ' + sstCatchupService.runCatchup()
+      render 'TBD...'
+    }
+  }
+
+  def runNext() {
+    task { // just render async for now - async remote request, later?
+      render 'Ran next: ' + sstCatchupService.runNext()
+    }
   }
 }
