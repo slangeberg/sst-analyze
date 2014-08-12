@@ -56,154 +56,165 @@ Dataset {
     String time[time = 2951];
 } sea_surface_temperature%2fALL_UKMO-L4HRfnd-GLOB-OSTIA_v01-fv02%2enc;
  */
-  // @see: DDS
-  public static final int MAX_LAT = 3600 - 1;
-  public static final int MAX_LON = 7200 - 1;
+   // @see: DDS
+   public static final int MAX_LAT = 3600 - 1;
+   public static final int MAX_LON = 7200 - 1;
 
-  final String DATA_FILE_NAME = 'ALL_UKMO-L4HRfnd-GLOB-OSTIA_v01-fv02.nc.ascii'
+   final String DATA_FILE_NAME = 'ALL_UKMO-L4HRfnd-GLOB-OSTIA_v01-fv02.nc.ascii'
 
-  int stepSize = 1800 //how many to skip: 1 = every step, 2 = every other, etc.
-  String latParams = "[0:$stepSize:$MAX_LAT]"
-  String lonParams = "[0:$stepSize:$MAX_LON]"
+   int stepSize = 1800 //how many to skip: 1 = every step, 2 = every other, etc.
+   String latParams = "[0:$stepSize:$MAX_LAT]"
+   String lonParams = "[0:$stepSize:$MAX_LON]"
 
-  def sstDayService
+   def sstDayService
 
-  /**
-   * @return Day 0 - the first day
-   */
-  SSTDay loadDay() {
-    loadDay(0)
-  }
+   String testFileContents
 
-  /**
-   * @param sstIndex - 0-based index for 'time' component. eg: sstIndex == 0 is the first day
-   * @return
-   */
-  SSTDay loadDay(int sstIndex) {
+   /**
+    * @return Day 0 - the first day
+    */
+   SSTDay loadDay() {
+      loadDay(0)
+   }
 
-    StopWatch timer = createAndStartStopWatch()
+   /**
+    * @param sstIndex - 0-based index for 'time' component. eg: sstIndex == 0 is the first day
+    * @return
+    */
+   SSTDay loadDay(int sstIndex) {
 
-    SSTDay day = sstDayService.findBySstIndex(sstIndex)
-    if ( day ) {
-      log.info("loadDay($sstIndex) - DB HIT")
-    } else {
-      log.info("loadDay($sstIndex) - DB MISS")
-      day = loadDayFromRemoteSource(getAnalysedSstParams(sstIndex))
-    }
-    log.info "loadDay($sstIndex) - time: ${timer.time}ms"
-    day
-  }
+      StopWatch timer = createAndStartStopWatch()
 
-  String getAnalysedSstParams(int sstIndex){
-    "[$sstIndex]$latParams$lonParams"
-  }
+      SSTDay day = sstDayService.findBySstIndex(sstIndex)
+      if ( day ) {
+         log.info("loadDay($sstIndex) - DB HIT")
+      } else {
+         log.info("loadDay($sstIndex) - DB MISS")
+         day = loadDayFromRemoteSource(getAnalysedSstParams(sstIndex))
+      }
+      log.info "loadDay($sstIndex) - time: ${timer.time}ms"
+      day
+   }
 
-  /**
-   * @param analysed_sst - String in form of: [time][lat][lon]
-   * @return
-   */
-  SSTDay loadDayFromRemoteSource(String analysed_sst) {
+   String getAnalysedSstParams(int sstIndex){
+      "[$sstIndex]$latParams$lonParams"
+   }
 
-    StopWatch timer = createAndStartStopWatch()
+   /**
+    * @param analysed_sst - String in form of: [time][lat][lon]
+    * @return
+    */
+   SSTDay loadDayFromRemoteSource(String analysed_sst) {
 
-    SSTDay day = loadDayFromLocalFile(analysed_sst)
+      StopWatch timer = createAndStartStopWatch()
 
-    if ( day ) {
-      log.info('loadDayFromRemoteSource() - cache HIT')
+      SSTDay day = loadDayFromLocalFile(analysed_sst)
 
-    } else {
-      //Check remote source
+      if ( day ) {
+         log.info('loadDayFromRemoteSource() - cache HIT')
 
-      log.info('loadDayFromRemoteSource() - cache MISS')
+      } else {
+         //Check remote source
 
-      String baseUrl = "http://thredds.jpl.nasa.gov/thredds/dodsC/sea_surface_temperature/$DATA_FILE_NAME"
-      String analysedSSTUrl = "$baseUrl?analysed_sst"
-      String url = "$analysedSSTUrl$analysed_sst"
+         log.info('loadDayFromRemoteSource() - cache MISS')
 
-      log.info("loadDayFromRemoteSource() - url: $url")
+         String baseUrl = "http://thredds.jpl.nasa.gov/thredds/dodsC/sea_surface_temperature/$DATA_FILE_NAME"
+         String analysedSSTUrl = "$baseUrl?analysed_sst"
+         String url = "$analysedSSTUrl$analysed_sst"
 
-      String content = url.toURL().text
+         log.info("loadDayFromRemoteSource() - url: $url")
 
-      //Write to disk
+         String content = url.toURL().text
 
-      writeFile(analysed_sst, content)
+         //Write to disk
 
-      log.info("loadDayFromRemoteSource() - analysed_sst: $analysed_sst, response time: ${timer.getTime()}ms")
+         writeFile(analysed_sst, content)
 
-      SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader reader =
-          new SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader(content)
-      day = reader.getDay() //analysed_sst)
-    }
+         log.info("loadDayFromRemoteSource() - analysed_sst: $analysed_sst, response time: ${timer.getTime()}ms")
 
-    log.info("loadDayFromRemoteSource() - analysed_sst: $analysed_sst, time: ${timer.getTime()}ms")
+         SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader reader =
+            new SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader(content)
+         day = reader.getDay() //analysed_sst)
+      }
 
-    day
-  }
+      log.info("loadDayFromRemoteSource() - analysed_sst: $analysed_sst, time: ${timer.getTime()}ms")
 
-  SSTDay loadDayFromLocalFile(String analysed_sst) {
+      day
+   }
 
-    StopWatch timer = createAndStartStopWatch()
+   SSTDay loadDayFromLocalFile(String analysed_sst) {
 
-    SSTDay day = null
-    File file = getFile(analysed_sst)
+      StopWatch timer = createAndStartStopWatch()
 
-    log.info( "loadDayFromLocalFile($analysed_sst) - file: $file")
-
-    if( file.isFile() ) {
-      String contents = file.text
+      String contents = getFileContents(analysed_sst)
 
 //      println "loadDayFromLocalFile() - file.text - time: ${timer.time}ms"
 
       SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader reader =
-          new SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader(contents)
-      day = reader.day
-    }
-    log.info( "loadDayFromLocalFile($analysed_sst) - day: $day, in time: ${timer.time}ms")
-    day
-  }
+         new SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader(contents)
+      SSTDay day = reader.day
 
-  String getFilePath(String analysed_sst){
-    String base = "${System.getProperty("user.dir")}/data"
-    String name = "${DATA_FILE_NAME}_analysed_sst${analysed_sst.replace(":", ".")}.txt"
-    String path = "$base/$name"
+      log.info( "loadDayFromLocalFile($analysed_sst) - day: $day, in time: ${timer.time}ms")
+      day
+   }
 
-    assert !path.contains("null")
+   String getFileContents(String analysed_sst) {
+      String contents = testFileContents ?: null
+      if( !contents ){
+         File file = getFile(analysed_sst)
 
-    path
-  }
+         log.info( "getFileContents($analysed_sst) - file: $file")
 
+         if( file.isFile() ) {
+            contents = file.text
+         }
+      }
+      contents
+   }
 
-  private File getFile(String analysed_sst) {
+   String getFilePath(String analysed_sst){
+      String path = testFilePath ?: null
+      if( !path ) {
+         String base = "${System.getProperty("user.dir")}/data"
+         String name = "${DATA_FILE_NAME}_analysed_sst${analysed_sst.replace(":", ".")}.txt"
+         path = "$base/$name"
+      }
+      assert !path.contains("null")
 
-    StopWatch timer = createAndStartStopWatch()
+      path
+   }
 
-    String path = getFilePath(analysed_sst)
-    File file = new File(path)
+   private File getFile(String analysed_sst) {
 
-    log.info "getFile() - file: $file, file.isFile(): ${file.isFile()}, file.text.size(): ${file.isFile() ? file?.text?.size() : 0}, time: ${timer.time}ms"
+      StopWatch timer = createAndStartStopWatch()
 
-    file
-  }
+      String path = getFilePath(analysed_sst)
+      File file = new File(path)
 
-  private File writeFile(String analysed_sst, String contents) {
+      log.info "getFile() - file: $file, file.isFile(): ${file.isFile()}, file.text.size(): ${file.isFile() ? file?.text?.size() : 0}, time: ${timer.time}ms"
 
-    log.info "writeFile($analysed_sst, contents.size(): ${contents?.size()})"
+      file
+   }
 
-    StopWatch timer = createAndStartStopWatch()
+   private File writeFile(String analysed_sst, String contents) {
 
-    String path = getFilePath(analysed_sst)
+      log.info "writeFile($analysed_sst, contents.size(): ${contents?.size()})"
 
-    File file = new File(path)
-    file.write(contents)
+      StopWatch timer = createAndStartStopWatch()
 
-    log.info "writeFile(): path: $path, file: $file, time: ${timer.time}ms"
+      String path = getFilePath(analysed_sst)
 
-    file
-  }
+      File file = new File(path)
+      file.write(contents)
 
-  StopWatch createAndStartStopWatch() {
-    StopWatch timer = new StopWatch()
-    timer.start()
-    timer
-  }
+      log.info "writeFile(): path: $path, file: $file, time: ${timer.time}ms"
+
+      file
+   }
+
+   StopWatch createAndStartStopWatch() {
+      StopWatch timer = new StopWatch()
+      timer.start()
+      timer
+   }
 }

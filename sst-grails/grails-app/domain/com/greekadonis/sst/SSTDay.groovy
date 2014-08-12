@@ -1,5 +1,7 @@
 package com.greekadonis.sst
 
+import org.joda.time.LocalDate
+
 //import grails.compiler.GrailsCompileStatic
 
 /* Example - src:
@@ -41,10 +43,7 @@ class SSTDay {
 
     static hasMany = [latitudes: SSTDayLatitude]
 
-//    String dataset
-
-//--> Todo: Update to Joda plugin!
-    Date time
+    LocalDate time
 
     int sstIndex //index for day in JPL labs datasets
 

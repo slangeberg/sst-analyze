@@ -3,19 +3,23 @@ package com.greekadonis.sst.data
 import com.greekadonis.sst.SSTDay
 import org.apache.log4j.Logger
 import org.codehaus.groovy.grails.web.json.JSONArray
+import org.joda.time.LocalDate
+import org.joda.time.format.ISODateTimeFormat
 
 //@GrailsCompileStatic
 class SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader {
 
-    private static final Logger log = Logger.getLogger(SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader.class.name)
+   private static final Logger log = Logger.getLogger(SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader.class.name)
 
-    //
-    // Takes raw results as returned from SST JPL remote service
-    //
-    String rawResult
-    String dataset
+   LocalDate time
 
-    String analysedSst
+   //
+   // Takes raw results as returned from SST JPL remote service
+   //
+   String rawResult
+   String dataset
+
+   String analysedSst
 
 /* @param rawResult
 - Example - src:
@@ -46,67 +50,73 @@ analysed_sst.lat[2]
 analysed_sst.lon[2]
 -179.975, -179.925
  */
-    public SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader(String rawResult){
+   public SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader(String rawResult){
 
-        log.info "SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader()"
+      log.info "SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader()"
 
-        this.rawResult = rawResult
+      this.rawResult = rawResult
 
-       // log.info "rawResult: $rawResult"
-        
-        this.dataset = ""
-        this.analysedSst = ""
+      // log.info "rawResult: $rawResult"
 
-     //   List<List<Integer>> sstVals = new ArrayList<List<Integer>>()
-        JSONArray sstVals = new JSONArray()
+      this.dataset = ""
+      this.analysedSst = ""
 
-        boolean isDataSet = true
-        boolean isAnalysedSst = false
-        boolean isTime = false
+      //   List<List<Integer>> sstVals = new ArrayList<List<Integer>>()
+      JSONArray sstVals = new JSONArray()
 
-        rawResult.eachLine { String line ->
+      boolean isDataSet = true
+      boolean isAnalysedSst = false
+      boolean isTime = false
 
-           // log.info line
+      rawResult.eachLine { String line ->
 
-            //Where?
-            if( isDataSet && line.startsWith("------") ) {
-                isDataSet = false
+         // log.info line
 
-            } else if ( line.startsWith("analysed_sst.analysed_sst") ){
-                isDataSet = false
-                isAnalysedSst = true
-                return; //skipToNext
+         //Where?
+         if( isDataSet && line.startsWith("------") ) {
+            isDataSet = false
 
-            } else if( isAnalysedSst && line.equals("") ) {
-                isAnalysedSst = false
-                isTime = true
-                return; //skip..
+         } else if ( line.startsWith("analysed_sst.analysed_sst") ){
+            isDataSet = false
+            isAnalysedSst = true
+            return; //skipToNext
+
+         } else if( line.startsWith("analysed_sst.time") ) {
+            println "isTime: TRUE"
+            isAnalysedSst = false
+            isTime = true
+            return; //skip..
+         }
+
+         //What?
+         if( isDataSet ) {
+            //keep in data set
+            dataset += "$line\n"
+
+         } else if ( isAnalysedSst ){
+            isAnalysedSst = true
+
+            line = line.replaceAll(" ", "")
+            List split = line.split(",") as List
+            split.remove(0) //should be coordinates, like: [lat][lon]
+
+            JSONArray lon = new JSONArray()
+            split.each {
+               lon.put(Integer.valueOf((it as String).trim()))
             }
+            sstVals.put(lon)
 
-            //What?
-            if( isDataSet ) {
-                //keep in data set
-                dataset += "$line\n"
-
-            } else if ( isAnalysedSst ){
-                isAnalysedSst = true
-
-                line = line.replaceAll(" ", "")
-                List split = line.split(",") as List
-                split.remove(0) //should be coordinates, like: [lat][lon]
-
-                JSONArray lon = new JSONArray()
-                split.each {
-                    lon.put(Integer.valueOf((it as String).trim()))
-                }
-                sstVals.put(lon)
+         } else if( isTime ){
+            println "isTime - line: $line"
+            if( line.startsWith("\"") && line.size() > 2 ){
+               time = ISODateTimeFormat.localDateParser().parseLocalDate(line.replace("\"", "").split("T")[0])
             }
-        }
-        analysedSst = sstVals.toString()  //json encode
+         }
+      }
+      analysedSst = sstVals.toString()  //json encode
    }
 
-    public SSTDay getDay(){
-        SSTDay day = new SSTDay() //analysedSSTKey, this)
-        return day
-    }
+   public SSTDay getDay(){
+      new SSTDay(time: time)
+   }
 }

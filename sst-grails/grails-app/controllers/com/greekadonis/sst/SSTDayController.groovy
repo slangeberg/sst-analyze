@@ -26,21 +26,4 @@ df: $df<br/>
 df - mean values: ${df.apply(DataFrame.mean)}
 """
     }
-
-//    def data = {
-////        def sst = dataReaderService.analysedSST
-//        def day = dataReaderService.day
-//        def value = day.toString()
-//            // sst.substring(sst.length()-1000, sst.length())
-//
-//        log.info "data() - value: $value"
-//
-//        render value
-//    }
-    
-    def remote = {
-        log.info("remote() - ")
-
-        render "day: ${dataLoaderService.loadDay()}"
-    }
 }
