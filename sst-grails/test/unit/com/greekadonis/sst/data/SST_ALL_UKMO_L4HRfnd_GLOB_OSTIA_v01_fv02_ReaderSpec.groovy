@@ -34,7 +34,7 @@ class SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_ReaderSpec extends Specification 
 
       expect:
       day.time == time
-      day.latitudes.size() == 5
+      day.latitudes.size() == 3
       day.latitudes[0].longitudes.size() == 5
    }
 

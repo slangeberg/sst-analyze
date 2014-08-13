@@ -2,9 +2,13 @@ package com.greekadonis.sst
 
 class SSTDayLongitude {
 
-    static hasMany = [values: SSTDayLongitudeValue]
+   static hasMany = [values: SSTDayLongitudeValue]
 
 //    static belongsTo = [day:SSTDayLatitude]
 
-    Double lon
+   Double lon
+
+   public SSTDayLongitude() {
+      values = []
+   }
 }

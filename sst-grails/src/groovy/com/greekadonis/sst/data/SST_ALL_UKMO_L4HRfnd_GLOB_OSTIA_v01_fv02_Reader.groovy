@@ -1,8 +1,10 @@
 package com.greekadonis.sst.data
 
 import com.greekadonis.sst.SSTDay
+import com.greekadonis.sst.SSTDayLatitude
+import com.greekadonis.sst.SSTDayLongitude
+import com.greekadonis.sst.SSTDayLongitudeValue
 import org.apache.log4j.Logger
-import org.codehaus.groovy.grails.web.json.JSONArray
 import org.joda.time.LocalDate
 import org.joda.time.format.ISODateTimeFormat
 
@@ -19,7 +21,9 @@ class SST_ALL_UKMO_L4HRfnd_GLOB_OSTIA_v01_fv02_Reader {
    String rawResult
    String dataset
 
-   String analysedSst
+   List<List<Integer>> sstVals
+
+  // String analysedSst
 
 /* @param rawResult
 - Example - src:
@@ -59,10 +63,9 @@ analysed_sst.lon[2]
       // log.info "rawResult: $rawResult"
 
       this.dataset = ""
-      this.analysedSst = ""
+    //  this.analysedSst = ""
 
-      //   List<List<Integer>> sstVals = new ArrayList<List<Integer>>()
-      JSONArray sstVals = new JSONArray()
+      sstVals = new ArrayList<List<Integer>>()
 
       boolean isDataSet = true
       boolean isAnalysedSst = false
@@ -100,23 +103,34 @@ analysed_sst.lon[2]
             List split = line.split(",") as List
             split.remove(0) //should be coordinates, like: [lat][lon]
 
-            JSONArray lon = new JSONArray()
+            //JSONArray lon = new JSONArray()
+            List<Integer> lon = []
             split.each {
-               lon.put(Integer.valueOf((it as String).trim()))
+               lon << Integer.valueOf((it as String).trim())
             }
-            sstVals.put(lon)
+            sstVals << lon
 
          } else if( isTime ){
             println "isTime - line: $line"
-            if( line.startsWith("\"") && line.size() > 2 ){
+            if( !time && line.startsWith("\"") && line.size() > 2 ){
                time = ISODateTimeFormat.localDateParser().parseLocalDate(line.replace("\"", "").split("T")[0])
             }
          }
       }
-      analysedSst = sstVals.toString()  //json encode
+      //analysedSst = sstVals.toString()  //json encode
    }
 
    public SSTDay getDay(){
-      new SSTDay(time: time)
+      SSTDay day = new SSTDay(time: time)
+      for( List<Integer> latVals : sstVals ) {
+         SSTDayLatitude latitude = new SSTDayLatitude(day: day)
+         day.latitudes << latitude
+         for( Integer value : latVals ){
+            SSTDayLongitude longitude = new SSTDayLongitude()
+            latitude.longitudes << longitude
+            longitude.values = [new SSTDayLongitudeValue(analysed_sst: value)]
+         }
+      }
+      day
    }
 }
