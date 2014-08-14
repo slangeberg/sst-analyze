@@ -21,16 +21,10 @@ class ReportController {
     Map<SSTDay, Double> dailyAverages = new LinkedHashMap<SSTDay, Double>()
 
     List<SSTDay> days = [
-      new SSTDay(sstIndex: 0,
-        latitudes: [
-          createLatitude(0, 10),
-          createLatitude(1, 10)
-      ]),
-      new SSTDay(sstIndex: 1,
-        latitudes: [
-          createLatitude(0, 20),
-          createLatitude(1, 20)
-      ])
+      createDay(0, 10),
+      createDay(1, 20),
+      createDay(2, 30),
+      createDay(3, 40)
     ]
     days.each { SSTDay day ->
       int count = 0
@@ -45,7 +39,7 @@ class ReportController {
     }
 
     String page = """
-#days: ${days.size()}, time: ${timer.time}ms<br/>
+#days: ${days.size()}, #latitudes/day: ${days[0].latitudes.size()}, #longitudes/day: ${days[0].latitudes[0].longitudes.size()}, time: ${timer.time}ms<br/>
 <br/>
 <h3>avg daily temps:</h3> <br/>
 <table>
@@ -61,17 +55,22 @@ class ReportController {
     render page
   }
 
+  protected SSTDay createDay(int index, int value) {
+    List<SSTDayLatitude> latitudes = []
+    (0..99).each {
+      latitudes << createLatitude(it, value)
+    }
+    new SSTDay(sstIndex: index, latitudes: latitudes)
+  }
+
   protected SSTDayLatitude createLatitude(int lat, int analysed_sst) {
-    new SSTDayLatitude(lat: lat,
-      longitudes: [
-        new SSTDayLongitude(lon: 0,
-          values: [
-            new SSTDayLongitudeValue(analysed_sst: analysed_sst)
-          ]),
-        new SSTDayLongitude(lon: 1,
-          values: [
-            new SSTDayLongitudeValue(analysed_sst: analysed_sst)
-          ])
-      ])
+    List<SSTDayLatitude> longitudes = []
+    (0..99).each {
+      longitudes << new SSTDayLongitude(lon: it,
+        values: [
+          new SSTDayLongitudeValue(analysed_sst: analysed_sst)
+        ])
+    }
+    new SSTDayLatitude(lat: lat, longitudes: longitudes)
   }
 }
