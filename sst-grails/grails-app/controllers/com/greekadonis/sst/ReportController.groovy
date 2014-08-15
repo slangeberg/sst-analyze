@@ -20,7 +20,9 @@ class ReportController {
     StopWatch timer = new StopWatch()
     timer.start()
 
-    Map<SSTDay, Double> dailyAverages = reportService.getDailyAverages(true)
+    Boolean cache = params.getBoolean('cache')
+
+    Map<SSTDay, Double> dailyAverages = reportService.getDailyAverages(true, cache != null ? cache : true)
 
     SSTDay firstDay = dailyAverages.keySet()[0]
 
@@ -40,6 +42,4 @@ class ReportController {
     page += "</table>"
     render page
   }
-
-
 }

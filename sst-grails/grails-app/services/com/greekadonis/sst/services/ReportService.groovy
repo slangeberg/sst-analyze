@@ -5,13 +5,24 @@ import com.greekadonis.sst.SSTDayLatitude
 import com.greekadonis.sst.SSTDayLongitude
 import com.greekadonis.sst.SSTDayLongitudeValue
 import grails.transaction.Transactional
+import org.apache.commons.lang.math.RandomUtils
 import org.apache.commons.lang3.time.StopWatch
 
 @Transactional
 class ReportService {
 
+  List<SSTDay> mockDays = []
+
   public Map<SSTDay, Double> getDailyAverages(boolean mock) {
-    log.info("getDailyAverages(mock: $mock)")
+    getDailyAverages(mock, true)
+  }
+
+  //
+  // @params mock - create mock data on server
+  // @params cache - cache mock results, if any
+  //
+  public Map<SSTDay, Double> getDailyAverages(boolean mock, boolean cache) {
+    log.info("getDailyAverages(mock: $mock, cache: $cache)")
 
     StopWatch timer = new StopWatch()
     timer.start()
@@ -19,12 +30,15 @@ class ReportService {
     Map<SSTDay, Double> dailyAverages = new LinkedHashMap<SSTDay, Double>()
     List<SSTDay> days = []
     if( mock ){
-      days = [
-        createDay(0, 10),
-        createDay(1, 20),
-        createDay(2, 30),
-        createDay(3, 40)
-      ]
+      if( mockDays.empty || !cache ) {
+        mockDays = [
+          createDay(0, 10),
+          createDay(1, 20),
+          createDay(2, 30),
+          createDay(3, 40)
+        ]
+      }
+      days = mockDays
     }
     log.info("getDailyAverages() - got days in: ${timer.time}ms")
 
@@ -62,10 +76,12 @@ class ReportService {
 
   protected SSTDayLatitude createLatitude(int lat, int analysed_sst) {
     List<SSTDayLatitude> longitudes = []
+    int temp = 0
     (0..99).each {
+      temp = analysed_sst + RandomUtils.nextInt(6)
       longitudes << new SSTDayLongitude(lon: it,
         values: [
-          new SSTDayLongitudeValue(analysed_sst: analysed_sst)
+          new SSTDayLongitudeValue(analysed_sst: temp)
         ])
     }
     new SSTDayLatitude(lat: lat, longitudes: longitudes)
