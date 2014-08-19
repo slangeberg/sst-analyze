@@ -78,7 +78,7 @@ class ReportService {
     List<SSTDayLatitude> longitudes = []
     int temp = 0
     (0..99).each {
-      temp = analysed_sst + RandomUtils.nextInt(6)
+      temp = analysed_sst + RandomUtils.nextInt(10)
       longitudes << new SSTDayLongitude(lon: it,
         values: [
           new SSTDayLongitudeValue(analysed_sst: temp)
